@@ -5,5 +5,73 @@ editor: visual
 ---
 
 ```{r}
-#test
+rm(list=ls()) 
+library(tidyverse)
+library(rjstat)
+library(httr)
+```
+
+```{r}
+
+
+url <- 'https://data.ssb.no/api/v0/no/table/09171/'
+  
+query <- '{
+  "query": [
+    {
+      "code": "NACE",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "pub2X01_02",
+          "pub2X03",
+          "nr2X06_09",
+          "nr23ind",
+          "pub2X35",
+          "pub2X36_39",
+          "pub2X41_43",
+          "pub2X45_47",
+          "pub2X49B",
+          "pub2X68B",
+          "pub2X69_75",
+          "pub2X84",
+          "pub2X85",
+          "pub2X86_88",
+          "nr23_6fn"
+        ]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "Prob",
+          "Pin",
+          "BNPB",
+          "Prob2",
+          "PIN2",
+          "BNPB2",
+          "BNPB2ses"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}'
+
+hent_indeks.tmp1 <- url %>%
+  POST(body = query, encode = "json")
+
+df <-  hent_indeks.tmp1 %>%
+  content("text") %>%
+  fromJSONstat() %>%
+  as_tibble()
+```
+
+```{r}
+df <- df %>% 
+  
 ```
