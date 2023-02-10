@@ -3,3 +3,101 @@ title: "Mappe_1"
 format: html
 editor: visual
 ---
+
+```{r}
+rm(list=ls()) 
+library(tidyverse)
+library(rjstat)
+library(httr)
+```
+
+Oppgave 1 - 40%
+Lag to til fire figurer som sammenligninger sysselsetting, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt på tvers av næringer i 2022. Sysselsetting oppgis i antall årsverk,
+produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt i løpende priser. Dere må selv
+avgjøre hvilke tall som er meningsfylte å sammenligne og hvorvidt dere ønsker å dele opp
+tallene i ulike figurer.
+
+```{r}
+
+
+url <- 'https://data.ssb.no/api/v0/no/table/09171/'
+  
+query <- '{
+  "query": [
+    {
+      "code": "NACE",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "pub2X01_02",
+          "pub2X03",
+          "nr2X06_09",
+          "nr23ind",
+          "pub2X35",
+          "pub2X36_39",
+          "pub2X41_43",
+          "pub2X45_47",
+          "pub2X49B",
+          "pub2X68B",
+          "pub2X69_75",
+          "pub2X84",
+          "pub2X85",
+          "pub2X86_88",
+          "nr23_6fn"
+        ]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "Prob",
+          "Pin",
+          "BNPB",
+          "Prob2",
+          "PIN2",
+          "BNPB2",
+          "BNPB2ses"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}'
+
+hent_indeks.tmp1 <- url %>%
+  POST(body = query, encode = "json")
+
+df <-  hent_indeks.tmp1 %>%
+  content("text") %>%
+  fromJSONstat() %>%
+  as_tibble()
+```
+
+Oppgave 2 - 10%
+Diskuter hvorvidt bruttoprodukt per sysselsatt er et godt mål på produktivitet i offentlig
+sektor.
+
+```{r}
+
+```
+
+Oppgave 3 - 40%
+Lag figurer som viser bruttoprodukt per næring i både faste og løpende priser mellom 2012 og
+2022. Diskuter hvorvidt det er noen næringer hvor variasjon i produktprisene har særlig stor
+innvirkning på verdien av bruttoproduksjonen.
+
+```{r}
+
+```
+
+Oppgave 4 - 10%
+I norsk sammenheng skiller vi ofte mellom brutto nasjonal produkt (BNP) og brutto nasjonalprodukt på fastlandet (FN-BNP). Hvilke næringer er unntatt fra FN-BNP, og hvorfor gjøres
+dette? Knytt gjerne besvarelsen til funnene fra oppgave 3.
+
+```{r}
+
+```
