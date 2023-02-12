@@ -4,22 +4,16 @@ format: html
 editor: visual
 ---
 
-```{r}
+```{r, warning=FALSE}
 rm(list=ls()) 
 library(tidyverse)
 library(rjstat)
 library(httr)
 ```
 
-Oppgave 1 - 40%
-Lag to til fire figurer som sammenligninger sysselsetting, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt på tvers av næringer i 2022. Sysselsetting oppgis i antall årsverk,
-produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt i løpende priser. Dere må selv
-avgjøre hvilke tall som er meningsfylte å sammenligne og hvorvidt dere ønsker å dele opp
-tallene i ulike figurer.
+Oppgave 1 - 40% Lag to til fire figurer som sammenligninger sysselsetting, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt på tvers av næringer i 2022. Sysselsetting oppgis i antall årsverk, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt i løpende priser. Dere må selv avgjøre hvilke tall som er meningsfylte å sammenligne og hvorvidt dere ønsker å dele opp tallene i ulike figurer.
 
 ```{r}
-
-
 url <- 'https://data.ssb.no/api/v0/no/table/09171/'
   
 query <- '{
@@ -84,26 +78,25 @@ df <-  hent_indeks.tmp1 %>%
   as_tibble()
 ```
 
-Oppgave 2 - 10%
-Diskuter hvorvidt bruttoprodukt per sysselsatt er et godt mål på produktivitet i offentlig
-sektor.
+Oppgave 2 - 10% Diskuter hvorvidt bruttoprodukt per sysselsatt er et godt mål på produktivitet i offentlig sektor.
+
+Verdiskaping og opptjent bruttoinntekt fra innenlandsk produksjonsaktivitet i en næring eller sektor og definert som produksjon minus produktinnsats. I motsetning til markedsrettet produksjon, blir bruttoproduktet i offentlig forvaltning konvensjonelt beregnet fra kostnadssiden, uten å inkludere kapitalavkastning. Det medfører at bruttoprodukt per sysselsatt i offentlig tjenesteyting definisjonsmessig verdsettes lavere enn i markedsrettet virksomhet.
+
+privat sektor = konkurranse
+
+offentlig sektor = goder til befolkningen
 
 ```{r}
 
 ```
 
-Oppgave 3 - 40%
-Lag figurer som viser bruttoprodukt per næring i både faste og løpende priser mellom 2012 og
-2022. Diskuter hvorvidt det er noen næringer hvor variasjon i produktprisene har særlig stor
-innvirkning på verdien av bruttoproduksjonen.
+Oppgave 3 - 40% Lag figurer som viser bruttoprodukt per næring i både faste og løpende priser mellom 2012 og 2022. Diskuter hvorvidt det er noen næringer hvor variasjon i produktprisene har særlig stor innvirkning på verdien av bruttoproduksjonen.
 
 ```{r}
 
 ```
 
-Oppgave 4 - 10%
-I norsk sammenheng skiller vi ofte mellom brutto nasjonal produkt (BNP) og brutto nasjonalprodukt på fastlandet (FN-BNP). Hvilke næringer er unntatt fra FN-BNP, og hvorfor gjøres
-dette? Knytt gjerne besvarelsen til funnene fra oppgave 3.
+Oppgave 4 - 10% I norsk sammenheng skiller vi ofte mellom brutto nasjonal produkt (BNP) og brutto nasjonalprodukt på fastlandet (FN-BNP). Hvilke næringer er unntatt fra FN-BNP, og hvorfor gjøres dette? Knytt gjerne besvarelsen til funnene fra oppgave 3.
 
 ```{r}
 
