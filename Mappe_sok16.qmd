@@ -87,7 +87,19 @@ privat sektor = konkurranse
 offentlig sektor = goder til befolkningen
 
 ```{r}
+library(lubridate)
+library(dplyr)
 
+
+df2 <- df %>%
+separate(kvartal, 
+         into=c("year"), 
+         sep="K") %>% 
+  mutate(year = as.numeric(year))
+
+df2 <- df2 %>%
+  group_by(statistikkvariabel, næring) %>% 
+  summarise(verdi = sum(value))
 ```
 
 Oppgave 3 - 40% Lag figurer som viser bruttoprodukt per næring i både faste og løpende priser mellom 2012 og 2022. Diskuter hvorvidt det er noen næringer hvor variasjon i produktprisene har særlig stor innvirkning på verdien av bruttoproduksjonen.
