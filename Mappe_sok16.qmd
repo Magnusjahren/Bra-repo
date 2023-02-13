@@ -97,20 +97,25 @@ df2 <- df %>%
 separate(kvartal, 
          into=c("year"), 
          sep="K") %>% 
-  mutate(year = as.numeric(year))
+  mutate(year = (year)) %>% 
+  rename(var = statistikkvariabel)
 
 df2 <- df2 %>% 
-  group_by(year, næring, statistikkvariabel) %>% 
+  group_by(year, næring, var) %>% 
   summarise(verdi = sum(value))
 ```
 
 ```{r}
-
-df2 %>% 
-  filter(statistikkvariabel == "´Bruttoprodukt i basisverdi. Løpende priser (mill. kr)´") %>% 
-  filter(statistikkvariabel == "´Bruttoprodukt i basisverdi. Løpende priser (mill. kr)´") %>% 
-  ggplot(aes(x = year, y = verdi))+
-  geom_line()
+df3 <- df2 %>% 
+  filter(var != 'Produksjon i basisverdi. Løpende priser (mill. kr)') %>% 
+  filter(var != 'Produktinnsats. Løpende priser (mill. kr)') %>% 
+  filter(year >= 2011) %>% 
+  filter()
+df3 %>% 
+  ggplot(aes(x = year, y = verdi, color = næring))+
+  geom_col()+
+  theme(legend.position = "bottom")
+  #facet_wrap(~næring)
 ```
 
 Oppgave 3 - 40% Lag figurer som viser bruttoprodukt per næring i både faste og løpende priser mellom 2012 og 2022. Diskuter hvorvidt det er noen næringer hvor variasjon i produktprisene har særlig stor innvirkning på verdien av bruttoproduksjonen.
