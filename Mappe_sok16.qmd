@@ -4,6 +4,9 @@ format: html
 editor: visual
 ---
 
+
+```{r, warning=FALSE}
+
 ```{r}
 rm(list=ls()) 
 library(tidyverse)
@@ -14,6 +17,8 @@ library(httr)
 Oppgave 1 - 40% Lag to til fire figurer som sammenligninger sysselsetting, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt på tvers av næringer i 2022. Sysselsetting oppgis i antall årsverk, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt i løpende priser. Dere må selv avgjøre hvilke tall som er meningsfylte å sammenligne og hvorvidt dere ønsker å dele opp tallene i ulike figurer.
 
 ```{r}
+
+
 
 
 url <- 'https://data.ssb.no/api/v0/no/table/09171/'
@@ -29,6 +34,10 @@ query <- '{
           "pub2X03",
           "pub2X05",
           "nr2X06_09",
+
+          "nr23ind",
+
+
           "pub2X35",
           "pub2X36_39",
           "pub2X41_43",
@@ -61,7 +70,12 @@ query <- '{
         "values": [
           "Prob",
           "Pin",
+
+          "BNPB",
+          "BNPB2"
+
           "BNPB"
+
         ]
       }
     }
@@ -82,7 +96,44 @@ df <-  hent_indeks.tmp1 %>%
 
 Oppgave 2 - 10% Diskuter hvorvidt bruttoprodukt per sysselsatt er et godt mål på produktivitet i offentlig sektor.
 
+
+Verdiskaping og opptjent bruttoinntekt fra innenlandsk produksjonsaktivitet i en næring eller sektor og definert som produksjon minus produktinnsats. I motsetning til markedsrettet produksjon, blir bruttoproduktet i offentlig forvaltning konvensjonelt beregnet fra kostnadssiden, uten å inkludere kapitalavkastning. Det medfører at bruttoprodukt per sysselsatt i offentlig tjenesteyting definisjonsmessig verdsettes lavere enn i markedsrettet virksomhet.
+
+privat sektor = konkurranse
+
+offentlig sektor = goder til befolkningen
+
 ```{r}
+library(lubridate)
+library(dplyr)
+
+
+df2 <- df %>%
+separate(kvartal, 
+         into=c("year"), 
+         sep="K") %>% 
+  mutate(year = (year)) %>% 
+  rename(var = statistikkvariabel)
+
+df2 <- df2 %>% 
+  group_by(year, næring, var) %>% 
+  summarise(verdi = sum(value))
+```
+
+```{r}
+df3 <- df2 %>% 
+  filter(var != 'Produksjon i basisverdi. Løpende priser (mill. kr)') %>% 
+  filter(var != 'Produktinnsats. Løpende priser (mill. kr)') %>% 
+  filter(year >= 2011) %>% 
+  filter()
+df3 %>% 
+  ggplot(aes(x = year, y = verdi, color = næring))+
+  geom_col()+
+  theme(legend.position = "bottom")
+  #facet_wrap(~næring)
+
+```{r}
+
 
 ```
 
