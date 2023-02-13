@@ -1,12 +1,11 @@
 ---
 title: "Mappe_1"
-format: pdf
+format: html
 editor: visual
-warning: false
-output: true
 ---
 
 ```{r}
+rm(list=ls()) 
 library(tidyverse)
 library(rjstat)
 library(httr)
@@ -79,28 +78,6 @@ df <-  hent_indeks.tmp1 %>%
   content("text") %>%
   fromJSONstat() %>%
   as_tibble()
-```
-
-```{r}
-df2 <- df %>% 
-  mutate(kvartal = as.numeric(kvartal))
-
-df2 <- df2 %>%
-  aggregate(value~kvartal, FUN = mean)
-  
-  
-  
-
-
-
-
-df %>%
-  ggplot(aes(x=kvartal, y=value, color=statistikkvariabel))+
-  geom_col()+
-  theme(legend.position="bottom")
-
-
-
 ```
 
 Oppgave 2 - 10% Diskuter hvorvidt bruttoprodukt per sysselsatt er et godt mål på produktivitet i offentlig sektor.
