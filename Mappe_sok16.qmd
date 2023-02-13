@@ -4,6 +4,7 @@ format: html
 editor: visual
 ---
 
+
 ```{r, warning=FALSE}
 rm(list=ls()) 
 library(tidyverse)
@@ -128,4 +129,7 @@ Oppgave 4 - 10% I norsk sammenheng skiller vi ofte mellom brutto nasjonal produk
 
 ```{r}
 
-```
+=======
+```{r}
+adad
+
