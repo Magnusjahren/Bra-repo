@@ -266,14 +266,13 @@ df_graf_1 <- df2 %>%
   filter(var != 'Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)') %>% 
   filter(year >= 2011) %>% 
   filter(næring %in% c(
-           'Fiske, fangst og akvakultur',
            'Helse- og omsorgstjenester',
            'Utvinning av råolje og naturgass, inkl. tjenester',
-           'Offentlig administrasjon og forsvar',
-           'Industri'))
+           'Offentlig administrasjon og forsvar'))
 graf_1 <- ggplot(df_graf_1, aes(x = year, y = log(verdi), color = næring, group = næring))+
   geom_line()+
-  theme(legend.position = "")
+  theme(legend.position = "")+
+  scale_x_discrete(guide = guide_axis(n.dodge = 2))
   
 
 df_graf_2 <- df2 %>% 
@@ -282,17 +281,16 @@ df_graf_2 <- df2 %>%
   filter(var != 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)') %>% 
   filter(year >= 2011) %>% 
   filter(næring %in% c(
-           'Fiske, fangst og akvakultur',
            'Helse- og omsorgstjenester',
            'Utvinning av råolje og naturgass, inkl. tjenester',
-           'Offentlig administrasjon og forsvar',
-           'Industri'))
+           'Offentlig administrasjon og forsvar'))
 
 graf_2 <- ggplot(df_graf_2, aes(x = year, y = log(verdi), color = næring, group = næring))+
   geom_line()+
-  theme(legend.position = "bottom")
+  theme(legend.position = "")+
+  scale_x_discrete(guide = guide_axis(n.dodge = 2))
 
-plot_grid(graf_1, graf_2, nrow=2)
+plot_grid(graf_1, graf_2)
 ```
 
 Oppgave 3 - 40% Lag figurer som viser bruttoprodukt per næring i både faste og løpende priser mellom 2012 og 2022. Diskuter hvorvidt det er noen næringer hvor variasjon i produktprisene har særlig stor innvirkning på verdien av bruttoproduksjonen.
