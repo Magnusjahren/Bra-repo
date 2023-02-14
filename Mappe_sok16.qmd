@@ -30,10 +30,7 @@ query <- '{
           "pub2X03",
           "pub2X05",
           "nr2X06_09",
-
           "nr23ind",
-
-
           "pub2X35",
           "pub2X36_39",
           "pub2X41_43",
@@ -66,12 +63,8 @@ query <- '{
         "values": [
           "Prob",
           "Pin",
-
           "BNPB",
           "BNPB2"
-
-          "BNPB"
-
         ]
       }
     }
