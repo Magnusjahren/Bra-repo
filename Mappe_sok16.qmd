@@ -245,7 +245,8 @@ df_lol %>%
   filter(år == 2021) %>%
   ggplot(aes(x=år, y=value, color =næring))+
   geom_col()+
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = "bottom")
 
 
 
