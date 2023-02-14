@@ -14,8 +14,6 @@ library(cowplot)
 options(scipen = 999)
 ```
 
-Oppgave 1 - 40% Lag to til fire figurer som sammenligninger sysselsetting, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt på tvers av næringer i 2022. Sysselsetting oppgis i antall årsverk, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt i løpende priser. Dere må selv avgjøre hvilke tall som er meningsfylte å sammenligne og hvorvidt dere ønsker å dele opp tallene i ulike figurer.
-
 ```{r}
 url <- 'https://data.ssb.no/api/v0/no/table/09171/'
   
@@ -233,6 +231,33 @@ df_lol <-  hent_indeks.tmp %>%
   content("text") %>%
   fromJSONstat() %>%
   as_tibble()
+```
+
+Oppgave 1 - 40% Lag to til fire figurer som sammenligninger sysselsetting, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt på tvers av næringer i 2022. Sysselsetting oppgis i antall årsverk, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt i løpende priser. Dere må selv avgjøre hvilke tall som er meningsfylte å sammenligne og hvorvidt dere ønsker å dele opp tallene i ulike figurer.
+
+```{r}
+df_lol <- df_lol %>%
+  rename(næring = 'næring (SN2007)')
+```
+
+```{r}
+df_lol %>%
+  filter(år == 2021) %>%
+  ggplot(aes(x=år, y=value, color =næring))+
+  geom_col()+
+  theme_minimal()
+
+
+
+
+```
+
+```{r}
+
+
+
+
+
 ```
 
 Oppgave 2 - 10% Diskuter hvorvidt bruttoprodukt per sysselsatt er et godt mål på produktivitet i offentlig sektor.
