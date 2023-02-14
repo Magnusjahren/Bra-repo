@@ -172,19 +172,43 @@ df_lol <-  hent_indeks.tmp %>%
 Oppgave 1 - 40% Lag to til fire figurer som sammenligninger sysselsetting, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt på tvers av næringer i 2022. Sysselsetting oppgis i antall årsverk, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt i løpende priser. Dere må selv avgjøre hvilke tall som er meningsfylte å sammenligne og hvorvidt dere ønsker å dele opp tallene i ulike figurer.
 
 ```{r}
-df_2021 <- df_lol %>%
-  filter(år == 2021)
+library(lubridate)
+library(dplyr)
+
+
+df2 <- df %>%
+separate(kvartal, 
+         into=c("year"), 
+         sep="K") %>% 
+  mutate(year = (year)) %>% 
+  rename(var = statistikkvariabel)
+
+df2 <- df2 %>% 
+  group_by(year, næring, var) %>% 
+  summarise(verdi = sum(value))
 
 ```
 
 ```{r}
 df_lol %>%
   filter(år == 2021) %>%
-  filter(næring %in% c("Helse- og omsorgstjenester", "Utvinning av råolje og naturgass, inkl. tjenester")) %>%
-  ggplot(aes(x=næring, y=value, fill=næring))+
+  filter(næring %in% c("Helse- og omsorgstjenester", 
+                       "Utvinning av råolje og naturgass, inkl. tjenester", 
+                       "Jordbruk og skogbruk", "Undervisning", 
+                       "Bygge- og anleggsvirksomhet",
+                       "Fiske, fangst og akvakultur",
+                       "Kultur, underholdning og annen tjenesteyting")) %>%
+  ggplot(aes(x=næring, y=value/2518.7*100, fill=næring))+
   geom_col()+
-  theme_minimal()
-
+  theme_minimal()+
+  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+                   labels=c("Kultur, underholdning og annen tjenesteyting"
+                            ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"))+
+  theme(legend.position = "none",
+        plot.title=element_text(size=12))+
+  labs(y="Prosentandel", x="",
+       title="Sysselsetting for næringer (prosent) 2021")+
+ scale_y_continuous(breaks = seq(from = 0, to = 30, by = 5), limits=c(0,30))
 
 
 
@@ -207,20 +231,7 @@ privat sektor = konkurranse
 offentlig sektor = goder til befolkningen
 
 ```{r}
-library(lubridate)
-library(dplyr)
 
-
-df2 <- df %>%
-separate(kvartal, 
-         into=c("year"), 
-         sep="K") %>% 
-  mutate(year = (year)) %>% 
-  rename(var = statistikkvariabel)
-
-df2 <- df2 %>% 
-  group_by(year, næring, var) %>% 
-  summarise(verdi = sum(value))
 ```
 
 ```{r}
