@@ -82,112 +82,66 @@ df <-  hent_indeks.tmp1 %>%
 ```
 
 ```{r}
-url <- 'https://data.ssb.no/api/v0/no/table/08536/'
+# sysselsetting i antall årsverk*(1000)
+url <- 'https://data.ssb.no/api/v0/no/table/09174/'
 query <- '{
   "query": [
     {
-      "code": "Region",
+      "code": "NACE",
       "selection": {
-        "filter": "vs:Landet",
+        "filter": "vs:NRNaeringPubAgg",
         "values": [
-          "0"
-        ]
-      }
-    },
-    {
-      "code": "NACE2007",
-      "selection": {
-        "filter": "item",
-        "values": [
-          "00-99",
-          "01",
-          "02",
-          "03",
-          "05",
-          "06",
-          "07",
-          "08",
-          "09",
-          "10",
-          "11",
-          "12",
-          "13",
-          "14",
-          "15",
-          "16",
-          "17",
-          "18",
-          "19",
-          "20",
-          "21",
-          "22",
-          "23",
-          "24",
-          "25",
-          "26",
-          "27",
-          "28",
-          "29",
-          "30",
-          "31",
-          "32",
-          "33",
-          "35",
-          "36",
-          "37",
-          "38",
-          "39",
-          "41",
-          "42",
-          "43",
-          "45",
-          "46",
-          "47",
-          "49",
-          "50",
-          "51",
-          "52",
-          "53",
-          "55",
-          "56",
-          "58",
-          "59",
-          "60",
-          "61",
-          "62",
-          "63",
-          "64",
-          "65",
-          "66",
-          "68",
-          "69",
-          "70",
-          "71",
-          "72",
-          "73",
-          "74",
-          "75",
-          "77",
-          "78",
-          "79",
-          "80",
-          "81",
-          "82",
-          "84",
-          "85",
-          "86",
-          "87",
-          "88",
-          "90",
-          "91",
-          "92",
-          "93",
-          "94",
-          "95",
-          "96",
-          "97",
-          "99",
-          "00"
+          "nr23_6",
+          "pub2X01_02",
+          "pub2X03",
+          "pub2X05",
+          "nr2X06_09",
+          "pub2X06",
+          "pub2X09",
+          "nr23ind",
+          "pub2X10_12",
+          "nr2310",
+          "nr2312",
+          "pub2X13_15",
+          "nr2315",
+          "nr2316",
+          "pub2X18",
+          "pub2X19_21",
+          "nr2319",
+          "pub2X22_23",
+          "pub2X24",
+          "pub2X25_28",
+          "pub2X29_30",
+          "pub2X31_32",
+          "pub2X33",
+          "pub2X35",
+          "pub2X36_39",
+          "pub2X41_43",
+          "pub2X45_47",
+          "pub2X49B",
+          "pub2X50A",
+          "pub2X49A_52",
+          "pub2X53",
+          "pub2X55_56",
+          "pub2X58_63",
+          "pub2X64_66",
+          "pub2X68A",
+          "pub2X68B",
+          "pub2X69_75",
+          "pub2X77_82",
+          "pub2X84",
+          "pub2X85",
+          "pub2X86_88",
+          "pub2X90_97",
+          "nr24_5",
+          "nr24_",
+          "nr24sivil",
+          "nr2482",
+          "nr25_",
+          "nr23_6fn",
+          "nr23fn",
+          "nr23mark",
+          "nrimark"
         ]
       }
     },
@@ -196,25 +150,7 @@ query <- '{
       "selection": {
         "filter": "item",
         "values": [
-          "SysselArbsted"
-        ]
-      }
-    },
-    {
-      "code": "Tid",
-      "selection": {
-        "filter": "item",
-        "values": [
-          "2012",
-          "2013",
-          "2014",
-          "2015",
-          "2016",
-          "2017",
-          "2018",
-          "2019",
-          "2020",
-          "2021"
+          "SysselsattNorm"
         ]
       }
     }
@@ -236,17 +172,18 @@ df_lol <-  hent_indeks.tmp %>%
 Oppgave 1 - 40% Lag to til fire figurer som sammenligninger sysselsetting, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt på tvers av næringer i 2022. Sysselsetting oppgis i antall årsverk, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt i løpende priser. Dere må selv avgjøre hvilke tall som er meningsfylte å sammenligne og hvorvidt dere ønsker å dele opp tallene i ulike figurer.
 
 ```{r}
-df_lol <- df_lol %>%
-  rename(næring = 'næring (SN2007)')
+df_2021 <- df_lol %>%
+  filter(år == 2021)
+
 ```
 
 ```{r}
 df_lol %>%
   filter(år == 2021) %>%
-  ggplot(aes(x=år, y=value, color =næring))+
+  filter(næring %in% c("Helse- og omsorgstjenester", "Utvinning av råolje og naturgass, inkl. tjenester")) %>%
+  ggplot(aes(x=næring, y=value, fill=næring))+
   geom_col()+
-  theme_minimal()+
-  theme(legend.position = "bottom")
+  theme_minimal()
 
 
 
