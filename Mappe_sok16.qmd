@@ -15,6 +15,7 @@ library(httr)
 library(cowplot)
 library(lubridate)
 library(dplyr)
+library(ggthemes)
 options(scipen = 999)
 ```
 
@@ -293,5 +294,56 @@ df3 %>%
 ```
 
 ```{r}
+# sette sammen alle tre figurene til en 
+df_p_b <-df3 %>%
+  filter(year == 2021) %>%
+  filter(næring %in% c("Helse- og omsorgstjenester", 
+                       "Utvinning av råolje og naturgass, inkl. tjenester", 
+                       "Jordbruk og skogbruk", "Undervisning", 
+                       "Bygge- og anleggsvirksomhet",
+                       "Fiske, fangst og akvakultur",
+                       "Kultur, underholdning og annen tjenesteyting")) %>%
+    mutate(brutto_pros=bruttoprodukt/5145241*100,
+         produ_pros=løpende/8759224*100)
 
+
+df_syssel <-df_lol %>%
+  filter(år == 2021) %>%
+    filter(næring %in% c("Helse- og omsorgstjenester", 
+                       "Utvinning av råolje og naturgass, inkl. tjenester", 
+                       "Jordbruk og skogbruk", "Undervisning", 
+                       "Bygge- og anleggsvirksomhet",
+                       "Fiske, fangst og akvakultur",
+                       "Kultur, underholdning og annen tjenesteyting")) %>%
+    mutate(pros_syssel=value/2518.7*100)
+
+df_p_b <- df_p_b[order(df_p_b$næring), ]
+df_syssel <- df_syssel[order(df_syssel$næring), ]
+
+pros_syssel <- df_syssel$pros_syssel
+df4 <- cbind(syssel=pros_syssel, df_p_b)
+
+ df4 <-df4 %>%
+pivot_longer(c('syssel','brutto_pros','produ_pros'), names_to = "wtf", values_to = "plot")
+```
+
+```{r}
+df4 %>%
+  ggplot()+
+  geom_col(aes(x=næring, y=plot, fill=wtf),position = "dodge")+
+  theme_minimal()+
+  theme(legend.position=c(0.75,0.92),
+    plot.title=element_text(size=12),
+    legend.direction="horizontal",
+    legend.text= element_text(size=7.5),
+    legend.key.size = unit(0.4, "cm"))+
+  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+                   labels=c("Kultur, underholdning og annen tjenesteyting"
+                            ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"))+
+    labs(y="Prosentandel", x="",
+       title="Andeler (prosent) 2021")+
+  scale_y_continuous(breaks = seq(from = 0, to = 30, by = 5), limits=c(0,30))+
+    scale_fill_discrete(name = "", labels = c("Bruttoprodukt",
+                                            "Produksjon",
+                                            "Sysselsetting"))
 ```
