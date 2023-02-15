@@ -28,11 +28,29 @@ query <- '{
       "selection": {
         "filter": "item",
         "values": [
+          "nr23_6",
           "pub2X01_02",
           "pub2X03",
           "pub2X05",
           "nr2X06_09",
+          "pub2X06",
+          "pub2X09",
           "nr23ind",
+          "pub2X10_12",
+          "nr2310",
+          "nr2312",
+          "pub2X13_15",
+          "nr2315",
+          "nr2316",
+          "pub2X18",
+          "pub2X19_21",
+          "nr2319",
+          "pub2X22_23",
+          "pub2X24",
+          "pub2X25_28",
+          "pub2X29_30",
+          "pub2X31_32",
+          "pub2X33",
           "pub2X35",
           "pub2X36_39",
           "pub2X41_43",
@@ -52,7 +70,13 @@ query <- '{
           "pub2X85",
           "pub2X86_88",
           "pub2X90_97",
+          "nr24_5",
+          "nr24_",
+          "nr24sivil",
+          "nr2482",
+          "nr25_",
           "nr23_6fn",
+          "nr23fn",
           "nr23mark",
           "nrimark"
         ]
@@ -64,8 +88,8 @@ query <- '{
         "filter": "item",
         "values": [
           "Prob",
-          "Pin",
           "BNPB",
+          "Prob2",
           "BNPB2"
         ]
       }
@@ -173,7 +197,7 @@ df_lol <-  hent_indeks.tmp %>%
   as_tibble()
 ```
 
-Oppgave 1 - 40% Lag to til fire figurer som sammenligninger sysselsetting, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt på tvers av næringer i 2022. Sysselsetting oppgis i antall årsverk, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt i løpende priser. Dere må selv avgjøre hvilke tall som er meningsfylte å sammenligne og hvorvidt dere ønsker å dele opp tallene i ulike figurer.
+Oppgave 1 - 40% Lag to til fire figurer som sammenligninger sysselsetting, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt på tvers av næringer i 2021. Sysselsetting oppgis i antall årsverk, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt i løpende priser. Dere må selv avgjøre hvilke tall som er meningsfylte å sammenligne og hvorvidt dere ønsker å dele opp tallene i ulike figurer.
 
 ```{r}
 df2 <- df %>%
@@ -191,12 +215,13 @@ df2 <- df2 %>%
 ```{r}
 df_lol %>%
   filter(år == 2021) %>%
-  filter(næring %in% c("Helse- og omsorgstjenester", 
+    filter(næring %in% c("Helse- og omsorgstjenester", 
                        "Utvinning av råolje og naturgass, inkl. tjenester", 
                        "Jordbruk og skogbruk", "Undervisning", 
                        "Bygge- og anleggsvirksomhet",
                        "Fiske, fangst og akvakultur",
                        "Kultur, underholdning og annen tjenesteyting")) %>%
+  # deler på totalt for alle næringerog ganger med 100 for å få prosent
   ggplot(aes(x=næring, y=value/2518.7*100, fill=næring))+
   geom_col()+
   theme_minimal()+
@@ -215,5 +240,48 @@ df_lol %>%
 
 ```{r}
 df3<-df2 %>%
-  pivot_wider(names_from = 'var', values_from='verdi')
+  pivot_wider(names_from = 'var', values_from='verdi') %>%
+  rename(løpende = 'Produksjon i basisverdi. Løpende priser (mill. kr)',
+         bruttoprodukt= 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)')
+
+```
+
+```{r}
+df3 %>%
+  filter(year == 2021) %>%
+  filter(næring %in% c("Helse- og omsorgstjenester", 
+                       "Utvinning av råolje og naturgass, inkl. tjenester", 
+                       "Jordbruk og skogbruk", "Undervisning", 
+                       "Bygge- og anleggsvirksomhet",
+                       "Fiske, fangst og akvakultur",
+                       "Kultur, underholdning og annen tjenesteyting")) %>%
+  # deler på totalt for alle næringerog ganger med 100 for å få prosent
+  ggplot(aes(x=næring, y=bruttoprodukt/5145241*100, fill=næring))+
+  geom_col()+
+  theme(legend.position = "none",
+        plot.title=element_text(size=12))+
+  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+                   labels=c("Kultur, underholdning og annen tjenesteyting"
+                            ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"))+
+    labs(y="Prosentandel", x="",
+       title="Bruttoprodukt 2021")
+  
+
+```
+
+```{r}
+df_oppg3_wide <- df2 %>%
+  pivot_wider(names_from = var, values_from = verdi) %>% 
+  select(-'Produktinnsats. Løpende priser (mill. kr)',-'Produksjon i basisverdi. Løpende priser (mill. kr)') %>% 
+  rename(løpende = 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)') %>% 
+  rename(faste = 'Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)')
+
+df_oppg3_wide %>% 
+ filter(næring != c('Fastlands-Norge', 'Markedsrettet virksomhet', 'Ikke-markedsrettet virksomhet')) %>%  
+  filter(year >= 2012) %>% 
+  ggplot(aes(x=year, y=faste, group = næring)) + 
+  geom_col(col="blue", fill="blue") +
+  geom_col(aes(x=year, y=løpende, group = næring), fill="red")+
+  facet_wrap(~næring)
+
 ```
