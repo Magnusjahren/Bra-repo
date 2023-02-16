@@ -192,7 +192,7 @@ query <- '{
 hent_indeks.tmp <- url %>%
   POST(body = query, encode = "json")
 
-df_lol <-  hent_indeks.tmp %>%
+df_syssel <-  hent_indeks.tmp %>%
   content("text") %>%
   fromJSONstat() %>%
   as_tibble()
@@ -214,7 +214,7 @@ df2 <- df2 %>%
 ```
 
 ```{r}
-df_lol %>%
+df_syssel %>%
   filter(år == 2021) %>%
     filter(næring %in% c("Helse- og omsorgstjenester", 
                        "Utvinning av råolje og naturgass, inkl. tjenester", 
@@ -295,54 +295,66 @@ df3 %>%
 
 ```{r}
 # sette sammen alle tre figurene til en 
-df_p_b <-df3 %>%
+df4 <-df3 %>%
+  # filter for årstall som skal brukes
   filter(year == 2021) %>%
+  # filter for næringene som skal sees videre på
   filter(næring %in% c("Helse- og omsorgstjenester", 
                        "Utvinning av råolje og naturgass, inkl. tjenester", 
                        "Jordbruk og skogbruk", "Undervisning", 
                        "Bygge- og anleggsvirksomhet",
                        "Fiske, fangst og akvakultur",
-                       "Kultur, underholdning og annen tjenesteyting")) %>%
+                       "Kultur, underholdning og annen tjenesteyting",
+                       "Industri")) %>%
+  # Regner ut prosentandelen i de ulike næringene
     mutate(brutto_pros=bruttoprodukt/5145241*100,
          produ_pros=løpende/8759224*100)
 
 
-df_syssel <-df_lol %>%
+df_syssel <-df_syssel %>%
   filter(år == 2021) %>%
     filter(næring %in% c("Helse- og omsorgstjenester", 
                        "Utvinning av råolje og naturgass, inkl. tjenester", 
                        "Jordbruk og skogbruk", "Undervisning", 
                        "Bygge- og anleggsvirksomhet",
                        "Fiske, fangst og akvakultur",
-                       "Kultur, underholdning og annen tjenesteyting")) %>%
+                       "Kultur, underholdning og annen tjenesteyting",
+                       "Industri")) %>%
+  #regner ut en ny variabel som gir prosenten til sysselsatte i de ulike næringene
     mutate(pros_syssel=value/2518.7*100)
 
-df_p_b <- df_p_b[order(df_p_b$næring), ]
+# Setter slik at næring går i samme 'order' nedover i radene på begge datasett
+df4 <- df4[order(df4$næring), ]
 df_syssel <- df_syssel[order(df_syssel$næring), ]
-
+# lager en kolonne for variabel å jobbe videre med
 pros_syssel <- df_syssel$pros_syssel
-df4 <- cbind(syssel=pros_syssel, df_p_b)
+# setter kolonnen inn i df4
+df4 <- cbind(syssel=pros_syssel, df4)
 
+# setter verdiene som skal plottes sammen i en variabel
  df4 <-df4 %>%
 pivot_longer(c('syssel','brutto_pros','produ_pros'), names_to = "names", values_to = "plot")
 ```
 
 ```{r}
 df4 %>%
-  ggplot()+
+  ggplot()+ # starter plottet, dodge gjør slik at kolonnene går på siden
   geom_col(aes(x=næring, y=plot, fill=names),position = "dodge")+
-  theme_minimal()+
-  theme(legend.position=c(0.75,0.92),
-    plot.title=element_text(size=12),
-    legend.direction="horizontal",
-    legend.text= element_text(size=7.5),
-    legend.key.size = unit(0.4, "cm"))+
-  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+  theme_minimal(base_size=10)+ # Endrer på tekst størrelsen til aksene
+  theme(legend.position=c(0.75,0.92), # Setter legenden inn i figuren
+    plot.title=element_text(size=12), # endrer størrelsen på teksen
+    legend.direction="horizontal", # setter legenden fra vertikal til horisontal
+    legend.text= element_text(size=8), # gjør legendestørrelse litt mindre
+    legend.key.size = unit(0.4, "cm"))+ # fargeboks litt mindre
+  scale_x_discrete(guide = guide_axis(n.dodge = 2), # fikser legende
                    labels=c("Kultur, underholdning og annen tjenesteyting"
-                            ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"))+
-    labs(y="", x="",
-       title="Andeler (prosent) 2021")+
+                            ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"),
+                   )+ # gir nye navn så de passer bedre i figuren
+    labs(y="", x="", # fjerner variabel navnene som står som default
+       title="Andeler (prosent) 2021")+ # setter tittel
+  # lager en sequence for y-aksen fra 0-30 med step 5
   scale_y_continuous(breaks = seq(from = 0, to = 30, by = 5), limits=c(0,30))+
+  # lager ordentlige navn på søylene
     scale_fill_discrete(name = "", labels = c("Bruttoprodukt",
                                             "Produksjon",
                                             "Sysselsetting"))
