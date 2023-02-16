@@ -13,7 +13,7 @@ library(cowplot)
 options(scipen = 999)
 ```
 
-Oppgave 1 - 40% Lag to til fire figurer som sammenligninger sysselsetting, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt på tvers av næringer i 2022. Sysselsetting oppgis i antall årsverk, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt i løpende priser. Dere må selv avgjøre hvilke tall som er meningsfylte å sammenligne og hvorvidt dere ønsker å dele opp tallene i ulike figurer.
+**Oppgave 1 - 40%** Lag to til fire figurer som sammenligninger sysselsetting, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt på tvers av næringer i 2022. Sysselsetting oppgis i antall årsverk, produksjon, bruttoprodukt, og bruttoprodukt per sysselsatt i løpende priser. Dere må selv avgjøre hvilke tall som er meningsfylte å sammenligne og hvorvidt dere ønsker å dele opp tallene i ulike figurer.
 
 ```{r}
 url <- 'https://data.ssb.no/api/v0/no/table/09171/'
@@ -234,7 +234,7 @@ df_lol <-  hent_indeks.tmp %>%
   as_tibble()
 ```
 
-Oppgave 2 - 10% Diskuter hvorvidt bruttoprodukt per sysselsatt er et godt mål på produktivitet i offentlig sektor.
+**Oppgave 2 - 10%** Diskuter hvorvidt bruttoprodukt per sysselsatt er et godt mål på produktivitet i offentlig sektor.
 
 Verdiskaping og opptjent bruttoinntekt fra innenlandsk produksjonsaktivitet i en næring eller sektor og definert som produksjon minus produktinnsats. I motsetning til markedsrettet produksjon, blir bruttoproduktet i offentlig forvaltning konvensjonelt beregnet fra kostnadssiden, uten å inkludere kapitalavkastning. Det medfører at bruttoprodukt per sysselsatt i offentlig tjenesteyting definisjonsmessig verdsettes lavere enn i markedsrettet virksomhet.
 
@@ -245,7 +245,6 @@ offentlig sektor = goder til befolkningen
 ```{r}
 library(lubridate)
 library(dplyr)
-
 
 df2 <- df %>%
 separate(kvartal, 
@@ -259,37 +258,7 @@ df2 <- df2 %>%
   summarise(verdi = sum(value))
 ```
 
-```{r}
-df_graf_1 <- df2 %>% 
- # filter(var != 'Produksjon i basisverdi. Løpende priser (mill. kr)') %>% 
- # filter(var != 'Produktinnsats. Løpende priser (mill. kr)') %>% 
-  filter(var == 'Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)') %>% 
-  filter(year >= 2011) %>% 
- # filter(næring %in% c(
- #          'Helse- og omsorgstjenester',
- #          'Utvinning av råolje og naturgass, inkl. tjenester',
- #          'Offentlig administrasjon og forsvar'))
-  ggplot(aes(x = verdi, y = næring, color = næring, group = næring))+
-  geom_line()+
-  theme(legend.key.size = unit(0.1, 'cm'))+
-  scale_x_discrete(guide = guide_axis(n.dodge = 2))
-  
-
-#df_graf_2 <- df2 %>% 
-  #filter(var != 'Produksjon i basisverdi. Løpende priser (mill. kr)') %>% 
- # filter(var != 'Produktinnsats. Løpende priser (mill. kr)') %>% 
- # filter(var == 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)') %>% 
- # filter(year >= 2011) %>% 
-  #filter(næring %in% c(
-  #         'Helse- og omsorgstjenester',
-  #         'Utvinning av råolje og naturgass, inkl. tjenester',
-  #         'Offentlig administrasjon og forsvar'))
-
- # ggplot(aes(x = year, y = log(verdi), color = næring, group = næring))+
- # geom_line()+
- # theme(legend.key.size = unit(0.1, 'cm'))+
- # scale_x_discrete(guide = guide_axis(n.dodge = 2))
-```
+**Oppgave 3 - 40%** Lag figurer som viser bruttoprodukt per næring i både faste og løpende priser mellom 2012 og 2022. Diskuter hvorvidt det er noen næringer hvor variasjon i produktprisene har særlig stor innvirkning på verdien av bruttoproduksjonen.
 
 ```{r}
 df_oppg3_wide <- df2 %>%
@@ -299,32 +268,28 @@ df_oppg3_wide <- df2 %>%
   rename(faste = 'Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)')
 
 df_oppg3_wide %>% 
- filter(næring %in% c('Fastlands-Norge', 'Markedsrettet virksomhet', 'Ikke-markedsrettet virksomhet')) %>%  
+  filter(næring %in% c('Bergverksdrift', 'Helse- og omsorgstjenester', 'Jordbruk og skogbruk', 'Utvinning av råolje og naturgass, inkl. tjenester', 'Fiske, fangst og akvakultur', 'Faglig, vitenskapelig og teknisk tjenesteyting' )) %>%  
   filter(year >= 2012) %>% 
-  ggplot(aes(x=year, group = næring, position = 'dodge')) + 
-  geom_col(aes(y = faste)) +
-  geom_col(aes(x=year, y=løpende))+
+  pivot_longer(cols=c(løpende, faste), names_to='pris', values_to='verdi') %>%
+  ggplot(aes(x=as.factor(year), y=verdi, fill=pris)) + 
+  geom_col(position = 'dodge', alpha = 0.8) +
   facet_wrap(~næring)+
-  scale_x_discrete(guide = guide_axis(angle = 45))
-  
+  #scale_y_log10() +  # add log scale to y-axis
+  scale_fill_manual(values=c('darkred', 'cornflowerblue')) +
+  scale_x_discrete(breaks=unique(df_oppg3_wide$year)) +
+  labs(x='År', y='log10 kr', fill='Pris') +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-```{r}
-df2 %>% 
-  filter(var %in% c('Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)', 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)')) %>% 
-  filter(næring %in% c('Helse- og omsorgstjenester',
-           'Utvinning av råolje og naturgass, inkl. tjenester',
-           'Offentlig administrasjon og forsvar')) %>% 
-  filter(year >=2011)
-```
+Næringer som er sterkt avhengige av råvarer eller energiprodukter, kan oppleve store svingninger i bruttoproduktet på grunn av variasjoner i produktprisene. Dette skyldes at prisene på råvarer og energi ofte kan være svært uforutsigbar, og påvirkes av faktorer som tilbud og etterspørsel, geopolitiske hendelser, valutakurser og klimatiske forhold.
 
-Oppgave 3 - 40% Lag figurer som viser bruttoprodukt per næring i både faste og løpende priser mellom 2012 og 2022. Diskuter hvorvidt det er noen næringer hvor variasjon i produktprisene har særlig stor innvirkning på verdien av bruttoproduksjonen.
+Eksempler på slike næringer inkluderer olje- og gassindustrien, gruveindustrien, jordbrukssektoren og fiskeindustrien. Variasjoner i produktprisene kan ha en betydelig innvirkning på bruttoproduksjonen i disse sektorene. For eksempel kan et fall i prisen på olje og gass føre til en reduksjon i bruttoproduksjonen i olje- og gassindustrien, mens en økning i prisene på jordbruksprodukter kan føre til en økning i bruttoproduksjonen i jordbrukssektoren.
 
-```{r}
+På den annen side er det også næringer som ikke nødvendigvis er så følsomme for endringer i produktprisene. For eksempel kan tjenestenæringer som helsevesen, utdanning og teknologisektoren i mindre grad påvirkes av slike variasjoner. Dette skyldes at disse sektorene er mindre avhengige av råvarer og energi, og i større grad er avhengige av andre faktorer som teknologiutvikling, innovasjon, og kvaliteten på tjenestene som tilbys.
 
-```
+**Oppgave 4 - 10%**
 
-Oppgave 4 - 10% I norsk sammenheng skiller vi ofte mellom brutto nasjonal produkt (BNP) og brutto nasjonalprodukt på fastlandet (FN-BNP). Hvilke næringer er unntatt fra FN-BNP, og hvorfor gjøres dette? Knytt gjerne besvarelsen til funnene fra oppgave 3.
+I norsk sammenheng skiller vi ofte mellom brutto nasjonal produkt (BNP) og brutto nasjonalprodukt på fastlandet (FN-BNP). Hvilke næringer er unntatt fra FN-BNP, og hvorfor gjøres dette? Knytt gjerne besvarelsen til funnene fra oppgave 3.
 
 Olje og gass trekkes fra fordi det er en inntektskilde som varierer veldig på grunn av markedet. Det er derfor lettere å lete etter sammenhenger i økonomien uten denne sektoren, det er også lettere å sammenlikne målingene internasjonalt. Det er først og fremst produktivitetsveksten i fastlandsøkonomien som bestemmer velstanden i Norge. En stor del av produksjonverdien kan være grunnrente.
 
