@@ -211,89 +211,13 @@ separate(kvartal,
 df2 <- df2 %>% 
   group_by(year, næring, var) %>% 
   summarise(verdi = sum(value))
-```
 
-```{r}
-df_syssel %>%
-  filter(år == 2021) %>%
-    filter(næring %in% c("Helse- og omsorgstjenester", 
-                       "Utvinning av råolje og naturgass, inkl. tjenester", 
-                       "Jordbruk og skogbruk", "Undervisning", 
-                       "Bygge- og anleggsvirksomhet",
-                       "Fiske, fangst og akvakultur",
-                       "Kultur, underholdning og annen tjenesteyting")) %>%
-  # deler på totalt for alle næringer og ganger med 100 for å få prosentvis
-  ggplot(aes(x=næring, y=value/2518.7*100, fill=næring))+
-  geom_col()+
-  theme_minimal()+
-  scale_x_discrete(guide = guide_axis(n.dodge = 2),
-                   labels=c("Kultur, underholdning og annen tjenesteyting"
-                            ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"))+
-  theme(legend.position = "none",
-        plot.title=element_text(size=12))+
-  labs(y="Prosentandel", x="",
-       title="Sysselsetting for næringer (prosent) 2021")+
- scale_y_continuous(breaks = seq(from = 0, to = 30, by = 5), limits=c(0,30))
-
-
-
-```
-
-```{r}
 df3<-df2 %>%
   pivot_wider(names_from = 'var', values_from='verdi') %>%
   rename(løpende = 'Produksjon i basisverdi. Løpende priser (mill. kr)',
          bruttoprodukt= 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)')
 
-```
 
-```{r}
-df3 %>%
-  filter(year == 2021) %>%
-  filter(næring %in% c("Helse- og omsorgstjenester", 
-                       "Utvinning av råolje og naturgass, inkl. tjenester", 
-                       "Jordbruk og skogbruk", "Undervisning", 
-                       "Bygge- og anleggsvirksomhet",
-                       "Fiske, fangst og akvakultur",
-                       "Kultur, underholdning og annen tjenesteyting")) %>%
-  # deler på totalt for alle næringerog ganger med 100 for å få prosentvis
-  ggplot(aes(x=næring, y=bruttoprodukt/5145241*100, fill=næring))+
-  geom_col()+
-  theme(legend.position = "none",
-        plot.title=element_text(size=12))+
-  scale_x_discrete(guide = guide_axis(n.dodge = 2),
-                   labels=c("Kultur, underholdning og annen tjenesteyting"
-                            ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"))+
-    labs(y="Prosentandel", x="",
-       title="Bruttoprodukt 2021")+
-  scale_y_continuous(breaks = seq(from = 0, to = 30, by = 5), limits=c(0,30))
-  
-
-```
-
-```{r}
-df3 %>%
-  filter(year == 2021) %>%
-  filter(næring %in% c("Helse- og omsorgstjenester", 
-                       "Utvinning av råolje og naturgass, inkl. tjenester", 
-                       "Jordbruk og skogbruk", "Undervisning", 
-                       "Bygge- og anleggsvirksomhet",
-                       "Fiske, fangst og akvakultur",
-                       "Kultur, underholdning og annen tjenesteyting")) %>%
-  # deler på totalt for alle næringerog ganger med 100 for å få prosentvis
-  ggplot(aes(x=næring, y=løpende/8759224*100, fill=næring))+
-  geom_col()+
-  theme(legend.position = "none",
-        plot.title=element_text(size=12))+
-  scale_x_discrete(guide = guide_axis(n.dodge = 2),
-                   labels=c("Kultur, underholdning og annen tjenesteyting"
-                            ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"))+
-    labs(y="Prosentandel", x="",
-       title="Produksjon 2021")+
-  scale_y_continuous(breaks = seq(from = 0, to = 30, by = 5), limits=c(0,30))
-```
-
-```{r}
 # sette sammen alle tre figurene til en 
 df4 <-df3 %>%
   # filter for årstall som skal brukes
@@ -334,6 +258,73 @@ df4 <- cbind(syssel=pros_syssel, df4)
 # setter verdiene som skal plottes sammen i en variabel
  df4 <-df4 %>%
 pivot_longer(c('syssel','brutto_pros','produ_pros'), names_to = "names", values_to = "plot")
+```
+
+```{r}
+df_syssel %>%
+  ggplot(aes(x=næring, y=pros_syssel, fill=næring))+
+  geom_col()+
+  theme_minimal(base_size = 10)+
+  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+                   labels=c("Kultur, underholdning og annen tjenesteyting"
+                            ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"))+
+  theme(legend.position = "none",
+        plot.title=element_text(size=12))+
+  labs(y="Prosentandel", x="",
+       title="Sysselsetting for næringer (prosent) 2021")+
+ scale_y_continuous(breaks = seq(from = 0, to = 30, by = 5), limits=c(0,30))
+
+
+
+```
+
+```{r}
+df3 %>%
+  filter(year == 2021) %>%
+  filter(næring %in% c("Helse- og omsorgstjenester", 
+                       "Utvinning av råolje og naturgass, inkl. tjenester", 
+                       "Jordbruk og skogbruk", "Undervisning", 
+                       "Bygge- og anleggsvirksomhet",
+                       "Fiske, fangst og akvakultur",
+                       "Kultur, underholdning og annen tjenesteyting",
+                       "Industri")) %>%
+  # deler på totalt for alle næringerog ganger med 100 for å få prosentvis
+  ggplot(aes(x=næring, y=bruttoprodukt/5145241*100, fill=næring))+
+  theme_minimal(base_size=10)+
+  geom_col()+
+  theme(legend.position = "none",
+        plot.title=element_text(size=12))+
+  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+                   labels=c("Kultur, underholdning og annen tjenesteyting"
+                            ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"))+
+    labs(y="Prosentandel", x="",
+       title="Bruttoprodukt 2021")+
+  scale_y_continuous(breaks = seq(from = 0, to = 30, by = 5), limits=c(0,30))
+  
+
+```
+
+```{r}
+df3 %>%
+  filter(year == 2021) %>%
+  filter(næring %in% c("Helse- og omsorgstjenester", 
+                       "Utvinning av råolje og naturgass, inkl. tjenester", 
+                       "Jordbruk og skogbruk", "Undervisning", 
+                       "Bygge- og anleggsvirksomhet",
+                       "Fiske, fangst og akvakultur",
+                       "Kultur, underholdning og annen tjenesteyting")) %>%
+  # deler på totalt for alle næringerog ganger med 100 for å få prosentvis
+  ggplot(aes(x=næring, y=løpende/8759224*100, fill=næring))+
+  theme_minimal(base_size=10)+
+  geom_col()+
+  theme(legend.position = "none",
+        plot.title=element_text(size=12))+
+  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+                   labels=c("Kultur, underholdning og annen tjenesteyting"
+                            ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"))+
+    labs(y="Prosentandel", x="",
+       title="Produksjon 2021")+
+  scale_y_continuous(breaks = seq(from = 0, to = 30, by = 5), limits=c(0,30))
 ```
 
 ```{r}
