@@ -312,7 +312,8 @@ df3 %>%
                        "Jordbruk og skogbruk", "Undervisning", 
                        "Bygge- og anleggsvirksomhet",
                        "Fiske, fangst og akvakultur",
-                       "Kultur, underholdning og annen tjenesteyting")) %>%
+                       "Kultur, underholdning og annen tjenesteyting",
+                       "Industri")) %>%
   # deler på totalt for alle næringerog ganger med 100 for å få prosentvis
   ggplot(aes(x=næring, y=løpende/8759224*100, fill=næring))+
   theme_minimal(base_size=10)+
@@ -327,6 +328,33 @@ df3 %>%
   scale_y_continuous(breaks = seq(from = 0, to = 30, by = 5), limits=c(0,30))
 ```
 
+**Figur 1.1** Total produksjon i basisverdi (løpende priser) og bruttoprodukt i basisverdi (løpende priser) for alle næringer 2021
+
+```{r}
+df2 %>%
+  filter(year == 2021) %>%
+  filter(næring == "Totalt for næringer") %>%
+  filter(var %in% c('Bruttoprodukt i basisverdi. Løpende priser (mill. kr)',
+                    'Produksjon i basisverdi. Løpende priser (mill. kr)')) %>%
+  ggplot()+
+  # priser er i millioner kroner så deler på 1000 for å få de i millarder
+    geom_col(aes(x=næring, y=verdi/1000, fill=var), position="dodge")+
+   theme_minimal()+
+  theme(legend.position="none", # fjerner legend
+         axis.text.x=element_blank())+ #fjerner tekst fra x-akse
+  annotate("text", x=0.77, y=2000, label=  # gir navn til søyle
+             "Bruttoprodukt", size=5)+
+  annotate("text", x=1.24, y=2000, label= # gir navn til søyle
+             "Produksjon", size=5)+
+  labs(title="Milliarder kroner 2021",x="",y="")+ # tittel
+  # fikser så man ser bedre verdiene
+  scale_y_continuous(breaks = seq(from = 0, to = 7000, by = 1000))
+```
+
+Produksjonen (det norske næringer produserte) for 2021 totalt var på 6848 milliarder kroner mens bruttoproduktet, som vil si verdiskapingen (produksjon-produktinnsats) var på 3782 milliarder kroner. Totalt for alle næringer var sysselsettingen på litt over 2.5 millioner årsverk (to femtiprosent stillinger regnes om til ett årsverk).
+
+**Figur 1.2** Sysselsetting, produksjon og bruttoprodukt fordelt på næring, 2021
+
 ```{r}
 df4 %>%
   ggplot()+ # starter plottet, dodge gjør slik at kolonnene går på siden
@@ -337,7 +365,7 @@ df4 %>%
     legend.direction="horizontal", # setter legenden fra vertikal til horisontal
     legend.text= element_text(size=8), # gjør legendestørrelse litt mindre
     legend.key.size = unit(0.4, "cm"))+ # fargeboks litt mindre
-  scale_x_discrete(guide = guide_axis(n.dodge = 2), # fikser legende
+  scale_x_discrete(guide = guide_axis(n.dodge = 2), # fikser x-aksen
                    labels=c("Kultur, underholdning og annen tjenesteyting"
                             ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"),
                    )+ # gir nye navn så de passer bedre i figuren
@@ -351,4 +379,6 @@ df4 %>%
                                             "Sysselsetting"))
 ```
 
-Produksjonen (det norske næringer produserte) for 2021 totalt var på x antall milliarder kroner mens bruttoproduktet, som vil si verdiskapingen (produksjon-produktinnsats), var på x antall kroner. Totalt for alle næringer var sysselsettingen på litt over 2.5 millioner årsverk(f. eks to femtiprosent stillinger regnes om til ett årsverk). Ser man på råolje og naturgass så står dette alene for 18% av vårt bruttoprodukt for alle næringer. På grunn av at oljen er en verdifull naturressurs gjør dette slik at bruttoproduktet blir hele x prosent av produksjonen.
+Produksjonen i industrien er faktisk høyere enn oljen, med sine 1095 millarder kroner mot olje- og gassutvinning som har 1066 millarder kroner i 2021 men på grunn av at industrien bruker produktinnsats fra andre næringer blir bruttoproduktet 236 milliarder som vil si ca. 23 prosent av produksjonen.
+
+Ser man på råolje og naturgass så står dette alene for 18% av vårt bruttoprodukt for alle næringer. På grunn av at oljen er en verdifull naturressurs gjør dette slik at bruttoproduktet som er på 918 millarder kroner blir ca. hele 85 prosent av produksjonen.
