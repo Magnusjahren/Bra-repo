@@ -385,11 +385,9 @@ Ser man på råolje og naturgass så står dette alene for 18% av vårt bruttopr
 
 **Oppgave 2 - 10%** Diskuter hvorvidt bruttoprodukt per sysselsatt er et godt mål på produktivitet i offentlig sektor.
 
-Verdiskaping og opptjent bruttoinntekt fra innenlandsk produksjonsaktivitet i en næring eller sektor og definert som produksjon minus produktinnsats. I motsetning til markedsrettet produksjon, blir bruttoproduktet i offentlig forvaltning konvensjonelt beregnet fra kostnadssiden, uten å inkludere kapitalavkastning. Det medfører at bruttoprodukt per sysselsatt i offentlig tjenesteyting definisjonsmessig verdsettes lavere enn i markedsrettet virksomhet.
+Bruttoprodukt per sysselsatt er et mål på produktivitet som brukes til å sammenligne produktiviteten mellom ulike sektorer, inkludert offentlig sektor. Imidlertid er det noen begrensninger når det gjelder å bruke bruttoprodukt som et mål på produktivitet i offentlig sektor. For det første har offentlig sektor en annen form for organisering og produksjon enn privat sektor, noe som kan gjøre det vanskelig å sammenligne produktiviteten mellom sektorene. For det andre inkluderes bruttoprodukt vanligvis ikke i offentlig sektors kapitalavkastning, noe som kan undervurdere produktiviteten i offentlig sektor, spesielt hvis sektoren bruker mye kapital i produksjonen.
 
-privat sektor = konkurranse
-
-offentlig sektor = goder til befolkningen
+Selv om Brutto produkt per sysselsatt kan være et nyttig mål på produktivitet i offentlig sektor, er det nødvendig å bruke flere mål for å få et mer omfattende bilde av produktiviteten i sektoren. Kvalitet og effektivitet er også viktige mål for offentlig sektor, og kan gi et mer komplett bilde av produktiviteten i sektoren. Dermed kan det være et nyttig supplement til andre mål på produktivitet og effektivitet i offentlig sektor.
 
 **Oppgave 3 - 40%** Lag figurer som viser bruttoprodukt per næring i både faste og løpende priser mellom 2012 og 2022. Diskuter hvorvidt det er noen næringer hvor variasjon i produktprisene har særlig stor innvirkning på verdien av bruttoproduksjonen.
 
@@ -410,7 +408,7 @@ df_oppg3_wide %>%
   #scale_y_log10() +  # add log scale to y-axis
   scale_fill_manual(values=c('darkred', 'cornflowerblue')) +
   scale_x_discrete(breaks=unique(df_oppg3_wide$year)) +
-  labs(x='År', y='log10 kr', fill='Pris') +
+  labs(x='År', y='mill kr', fill='Pris') +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   ylim(0,500000)
 ```
