@@ -218,7 +218,7 @@ df3<-df2 %>%
          bruttoprodukt= 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)')
 
 
-# sette sammen alle tre figurene til en 
+# sette sammen data til en figur 
 df4 <-df3 %>%
   # filter for årstall som skal brukes
   filter(year == 2021) %>%
@@ -247,6 +247,18 @@ df_syssel <-df_syssel %>%
   #regner ut en ny variabel som gir prosenten til sysselsatte i de ulike næringene
     mutate(pros_syssel=value/2518.7*100)
 
+df_bps <-df3 %>%
+  # filter for årstall som skal brukes
+  filter(year == 2021) %>%
+  # filter for næringene som skal sees videre på
+  filter(næring %in% c("Helse- og omsorgstjenester", 
+                       "Utvinning av råolje og naturgass, inkl. tjenester", 
+                       "Jordbruk og skogbruk", "Undervisning", 
+                       "Bygge- og anleggsvirksomhet",
+                       "Fiske, fangst og akvakultur",
+                       "Kultur, underholdning og annen tjenesteyting",
+                       "Industri"))
+
 # Setter slik at næring går i samme 'order' nedover i radene på begge datasett
 df4 <- df4[order(df4$næring), ]
 df_syssel <- df_syssel[order(df_syssel$næring), ]
@@ -254,6 +266,13 @@ df_syssel <- df_syssel[order(df_syssel$næring), ]
 pros_syssel <- df_syssel$pros_syssel
 # setter kolonnen inn i df4
 df4 <- cbind(syssel=pros_syssel, df4)
+
+# legger til antall sysselsatte i df_bps
+df_bps <- cbind(df_bps, value = df_syssel[, 4])
+# regner ut bruttoprodukt per sysselsatt i løpende priser
+df_bps <-df_bps %>%
+  mutate(value=value*1000,
+         plott=bruttoprodukt/value)
 
 # setter verdiene som skal plottes sammen i en variabel
  df4 <-df4 %>%
@@ -311,19 +330,35 @@ df4 %>%
                                             "Sysselsetting"))
 ```
 
-Produksjonen i industrien er faktisk høyere enn oljen, med sine 1095 millarder kroner mot olje- og gassutvinning som har 1066 millarder kroner i 2021 men på grunn av at industrien bruker produktinnsats fra andre næringer blir bruttoproduktet 236 milliarder som vil si ca. 23 prosent av produksjonen.
+Produksjonen i industrien er faktisk høyere enn oljen, med sine 1095 millarder kroner mot olje- og gassutvinning som har 1066 millarder kroner i 2021 men på grunn av at industrien bruker produktinnsats fra andre næringer blir bruttoproduktet 236 milliarder som vil si kun ca. 23 prosent av produksjonen.
 
 Ser man på råolje og naturgass så står dette alene for 18% av vårt bruttoprodukt for alle næringer. På grunn av at oljen er en verdifull naturressurs gjør dette slik at bruttoproduktet som er på 918 millarder kroner blir ca. hele 85 prosent av produksjonen.
 
+**Figur 1.3** Bruttoprodukt per sysselsatt i løpende priser fordelt på næringer
+
+```{r}
+# 3782222 bruttoprodukt løpende priser 2021
+# 2518.6*1000 sysselsatte i 2021
+df_bps %>%
+  ggplot()+
+  geom_col(aes(x=næring, y=plott, fill=næring))+
+  theme_minimal(base_size=10)+
+  theme(legend.position="none",
+        plot.title=element_text(size=12))+
+  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+                   labels=c("Kultur, underholdning og annen tjenesteyting"
+                            ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"),
+                   )+
+  labs(x="",y="",title="Millioner kroner 2021")
+```
+
+Her kan man se når man fordeler bruttoprodukt på antall sysselsatte i hver næring at råolje og naturgass tar en så stor del av bruttoproduktet alene, at det blir vanskelig å sammenligne. Alene har råolje og naturgass ca. 15.8 millioner kroner bruttoprodukt per sysselsatt i 2021. Sammenligner man med industrien så har den kun ca. 1.1 millioner kroner i bruttoprodukt per sysselsatt. Oljen er en viktig del av inntektene for offentlig sektor
+
 **Oppgave 2 - 10%** Diskuter hvorvidt bruttoprodukt per sysselsatt er et godt mål på produktivitet i offentlig sektor.
 
-Verdiskaping og opptjent bruttoinntekt fra innenlandsk produksjonsaktivitet i en næring eller sektor og definert som produksjon minus produktinnsats. I motsetning til markedsrettet produksjon, blir bruttoproduktet i offentlig forvaltning konvensjonelt beregnet fra kostnadssiden, uten å inkludere kapitalavkastning. Det medfører at bruttoprodukt per sysselsatt i offentlig tjenesteyting definisjonsmessig verdsettes lavere enn i markedsrettet virksomhet.
+Bruttoprodukt per sysselsatt er et mål på produktivitet som brukes til å sammenligne produktiviteten mellom ulike sektorer, inkludert offentlig sektor. Imidlertid er det noen begrensninger når det gjelder å bruke bruttoprodukt som et mål på produktivitet i offentlig sektor. For det første har offentlig sektor en annen form for organisering og produksjon enn privat sektor, noe som kan gjøre det vanskelig å sammenligne produktiviteten mellom sektorene. For det andre inkluderes bruttoprodukt vanligvis ikke i offentlig sektors kapitalavkastning, noe som kan undervurdere produktiviteten i offentlig sektor, spesielt hvis sektoren bruker mye kapital i produksjonen.
 
-privat sektor = konkurranse
-
-offentlig sektor = goder til befolkningen
-
-**Oppgave 3 - 40%** Lag figurer som viser bruttoprodukt per næring i både faste og løpende priser mellom 2012 og 2022. Diskuter hvorvidt det er noen næringer hvor variasjon i produktprisene har særlig stor innvirkning på verdien av bruttoproduksjonen.
+Selv om bruttoprodukt per sysselsatt kan være et nyttig mål på produktivitet i offentlig sektor, er det nødvendig å bruke flere mål for å få et mer omfattende bilde av produktiviteten i sektoren. Kvalitet og effektivitet er også viktige mål for offentlig sektor, og kan gi et mer komplett bilde av produktiviteten i sektoren. Dermed kan det være et nyttig supplement til andre mål på produktivitet og effektivitet i offentlig sektor. Om man skal gå ut ifra figur 1.3 er bruttoprodukt per sysselsatt et dårlig mål å måle produktiviteten på grunn av at naturgass og oljen er en så stor næring.
 
 ```{r}
 df_oppg3_wide <- df2 %>%
@@ -346,6 +381,10 @@ df_oppg3_wide %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   ylim(0,500000)
 ```
+
+Næringer som er sterkt avhengige av råvarer eller energiprodukter, kan oppleve store svingninger i bruttoproduktet på grunn av variasjoner i produktprisene. Dette skyldes at prisene på råvarer og energi ofte kan være svært uforutsigbar, og påvirkes av faktorer som tilbud og etterspørsel, geopolitiske hendelser, valutakurser og klimatiske forhold.
+
+Eksempler på slike næringer inkluderer olje- og gassindustrien, gruveindustrien, jordbrukssektoren og fiskeindustrien. Variasjoner i produktprisene kan ha en betydelig innvirkning på bruttoproduksjonen i disse sektorene. For eksempel kan et fall i prisen på olje og gass føre til en reduksjon i bruttoproduksjonen i olje- og gassindustrien, mens en økning i prisene på jordbruksprodukter kan føre til en økning i bruttoproduksjonen i jordbrukssektoren.
 
 **Oppgave 4 - 10%**
 
