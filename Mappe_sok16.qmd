@@ -273,9 +273,6 @@ df_syssel %>%
   labs(y="Prosentandel", x="",
        title="Sysselsetting for næringer (prosent) 2021")+
  scale_y_continuous(breaks = seq(from = 0, to = 30, by = 5), limits=c(0,30))
-
-
-
 ```
 
 ```{r}
@@ -381,4 +378,4 @@ df4 %>%
 
 Produksjonen i industrien er faktisk høyere enn oljen, med sine 1095 millarder kroner mot olje- og gassutvinning som har 1066 millarder kroner i 2021 men på grunn av at industrien bruker produktinnsats fra andre næringer blir bruttoproduktet 236 milliarder som vil si ca. 23 prosent av produksjonen.
 
-Ser man på råolje og naturgass så står dette alene for 18% av vårt bruttoprodukt for alle næringer. På grunn av at oljen er en verdifull naturressurs gjør dette slik at bruttoproduktet som er på 918 millarder kroner blir ca. hele 85 prosent av produksjonen.
+Ser man på råolje og naturgass så står dette alene for 18 prosent av vårt bruttoprodukt for alle næringer. På grunn av at oljen er en verdifull naturressurs gjør dette slik at bruttoproduktet på 918 millarder kroner blir ca. hele 85 prosent av produksjonen.
