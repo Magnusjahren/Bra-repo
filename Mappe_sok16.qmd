@@ -273,6 +273,9 @@ df_syssel %>%
   labs(y="Prosentandel", x="",
        title="Sysselsetting for næringer (prosent) 2021")+
  scale_y_continuous(breaks = seq(from = 0, to = 30, by = 5), limits=c(0,30))
+
+
+
 ```
 
 ```{r}
@@ -378,4 +381,52 @@ df4 %>%
 
 Produksjonen i industrien er faktisk høyere enn oljen, med sine 1095 millarder kroner mot olje- og gassutvinning som har 1066 millarder kroner i 2021 men på grunn av at industrien bruker produktinnsats fra andre næringer blir bruttoproduktet 236 milliarder som vil si ca. 23 prosent av produksjonen.
 
-Ser man på råolje og naturgass så står dette alene for 18 prosent av vårt bruttoprodukt for alle næringer. På grunn av at oljen er en verdifull naturressurs gjør dette slik at bruttoproduktet på 918 millarder kroner blir ca. hele 85 prosent av produksjonen.
+Ser man på råolje og naturgass så står dette alene for 18% av vårt bruttoprodukt for alle næringer. På grunn av at oljen er en verdifull naturressurs gjør dette slik at bruttoproduktet som er på 918 millarder kroner blir ca. hele 85 prosent av produksjonen.
+
+**Oppgave 2 - 10%** Diskuter hvorvidt bruttoprodukt per sysselsatt er et godt mål på produktivitet i offentlig sektor.
+
+Verdiskaping og opptjent bruttoinntekt fra innenlandsk produksjonsaktivitet i en næring eller sektor og definert som produksjon minus produktinnsats. I motsetning til markedsrettet produksjon, blir bruttoproduktet i offentlig forvaltning konvensjonelt beregnet fra kostnadssiden, uten å inkludere kapitalavkastning. Det medfører at bruttoprodukt per sysselsatt i offentlig tjenesteyting definisjonsmessig verdsettes lavere enn i markedsrettet virksomhet.
+
+privat sektor = konkurranse
+
+offentlig sektor = goder til befolkningen
+
+**Oppgave 3 - 40%** Lag figurer som viser bruttoprodukt per næring i både faste og løpende priser mellom 2012 og 2022. Diskuter hvorvidt det er noen næringer hvor variasjon i produktprisene har særlig stor innvirkning på verdien av bruttoproduksjonen.
+
+```{r}
+df_oppg3_wide <- df2 %>%
+  pivot_wider(names_from = var, values_from = verdi) %>% 
+  #select(-'Produktinnsats. Løpende priser (mill. kr)',-'Produksjon i basisverdi. Løpende priser (mill. kr)') %>% 
+  rename(løpende = 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)') %>% 
+  rename(faste = 'Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)')
+
+df_oppg3_wide %>% 
+  filter(næring %in% c( 'Helse- og omsorgstjenester', 'Jordbruk og skogbruk', 'Fiske, fangst og akvakultur', 'Faglig, vitenskapelig og teknisk tjenesteyting' )) %>%  
+  filter(year >= 2012) %>% 
+  pivot_longer(cols=c(løpende, faste), names_to='pris', values_to='verdi') %>%
+  ggplot(aes(x=as.factor(year), y=verdi, fill=pris)) + 
+  geom_col(position = 'dodge', alpha = 0.8) +
+  facet_wrap(~næring)+
+  #scale_y_log10() +  # add log scale to y-axis
+  scale_fill_manual(values=c('darkred', 'cornflowerblue')) +
+  scale_x_discrete(breaks=unique(df_oppg3_wide$year)) +
+  labs(x='År', y='log10 kr', fill='Pris') +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  ylim(0,500000)
+```
+
+**Oppgave 4 - 10%**
+
+I norsk sammenheng skiller vi ofte mellom brutto nasjonal produkt (BNP) og brutto nasjonalprodukt på fastlandet (FN-BNP). Hvilke næringer er unntatt fra FN-BNP, og hvorfor gjøres dette? Knytt gjerne besvarelsen til funnene fra oppgave 3.
+
+Olje og gass trekkes fra fordi det er en inntektskilde som varierer veldig på grunn av markedet. Det er derfor lettere å lete etter sammenhenger i økonomien uten denne sektoren, det er også lettere å sammenlikne målingene internasjonalt. Det er først og fremst produktivitetsveksten i fastlandsøkonomien som bestemmer velstanden i Norge. En stor del av produksjonverdien kan være grunnrente.
+
+Det er lagt vekt på makedsrettede fastlandsnæringer fordi produksjonen i offentlig sektor og boligtjenster ikke omsettes i markeder, det gjør at produksjonstallene stort sett er basert på kostnader.
+
+```{r}
+
+df_oppg3_wide %>% 
+  filter(var %in% )
+  ggplot(aes(x = year, y = verdi, group_by(næring))) %>% 
+  geom_line(aes(x = var))
+```
