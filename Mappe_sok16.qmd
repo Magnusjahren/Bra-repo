@@ -278,7 +278,8 @@ df_oppg3_wide %>%
   scale_fill_manual(values=c('darkred', 'cornflowerblue')) +
   scale_x_discrete(breaks=unique(df_oppg3_wide$year)) +
   labs(x='År', y='log10 kr', fill='Pris') +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  ylim(0,500000)
 ```
 
 Næringer som er sterkt avhengige av råvarer eller energiprodukter, kan oppleve store svingninger i bruttoproduktet på grunn av variasjoner i produktprisene. Dette skyldes at prisene på råvarer og energi ofte kan være svært uforutsigbar, og påvirkes av faktorer som tilbud og etterspørsel, geopolitiske hendelser, valutakurser og klimatiske forhold.
