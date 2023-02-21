@@ -395,8 +395,8 @@ df_oppg3_wide %>%
   filter(year >= 2012) %>% 
   filter(næring == 'Utvinning av råolje og naturgass, inkl. tjenester') %>% 
   ggplot(aes(x=as.factor(year), group = næring, fill = pris)) + 
-  geom_col(data = filter(test, pris == "løpende"), aes(y = verdi/1000), position = "dodge") +
-  geom_col(data = filter(test, pris == "faste"), aes(y = verdi/1000), position = "dodge") +
+  geom_col(data = filter(df_oppg3_wide, pris == "løpende"), aes(y = verdi/1000), position = "dodge") +
+  geom_col(data = filter(df_oppg3_wide, pris == "faste"), aes(y = verdi/1000), position = "dodge") +
   facet_wrap(~pris)+
   scale_fill_manual(values=c('red', 'blue')) +
   labs(x='År', y='Milliarder kroner', fill='pris', title = 'Utvinning av råolje og naturgass, inkl. tjenester') +
