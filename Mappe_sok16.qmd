@@ -367,7 +367,6 @@ Selv om bruttoprodukt per sysselsatt kan være et nyttig mål på produktivitet 
 ```{r}
 df_oppg3_wide <- df2 %>%
   pivot_wider(names_from = var, values_from = verdi) %>% 
-  #select(-'Produktinnsats. Løpende priser (mill. kr)',-'Produksjon i basisverdi. Løpende priser (mill. kr)') %>% 
   rename(løpende = 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)') %>% 
   rename(faste = 'Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)')
 test <- df_oppg3_wide %>% 
@@ -376,13 +375,11 @@ test <- df_oppg3_wide %>%
   pivot_longer(cols=c(løpende, faste), names_to='pris', values_to='verdi')
   
  test %>%
-   filter(næring %in% c( 'Helse- og omsorgstjenester', 'Jordbruk og skogbruk', 'Fiske, fangst og akvakultur', 'Faglig, vitenskapelig og teknisk tjenesteyting' )) %>%  
+   filter(næring %in% c( 'Helse- og omsorgstjenester', 'Industri', 'Fiske, fangst og akvakultur', 'Faglig, vitenskapelig og teknisk tjenesteyting' )) %>%  
   ggplot(aes(x=as.factor(year), y=verdi, fill=pris)) + 
-  geom_col(position = 'dodge', alpha = 0.8) +
+  geom_col(position = 'dodge') +
   facet_wrap(~næring)+
-  #scale_y_log10() +  # add log scale to y-axis
   scale_fill_manual(values=c('darkred', 'cornflowerblue')) +
-  scale_x_discrete(breaks=unique(df_oppg3_wide$year)) +
   labs(x='År', y='mill kr', fill='Pris') +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   ylim(0,500000)
