@@ -374,11 +374,12 @@ df_oppg3_wide <- df_oppg3_wide %>%
   
  df_oppg3_wide %>%
    filter(næring %in% c( 'Helse- og omsorgstjenester', 'Industri', 'Fiske, fangst og akvakultur', 'Faglig, vitenskapelig og teknisk tjenesteyting' )) %>%  
-  ggplot(aes(x=as.factor(year), y=verdi, fill=pris)) + 
+  ggplot(aes(x=year, y=verdi, fill=pris)) + 
   geom_col(position = 'dodge') +
   facet_wrap(~næring)+
   scale_fill_manual(values=c('lightcoral', 'cornflowerblue')) +
-  labs(x='År', y='millioner kroner', fill='Pris') +
+  labs(x='År', y='Millioner kroner', fill='Pris') +
+   theme_minimal(base_size=9)+
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "bottom")+
   ylim(0,500000)
@@ -402,7 +403,7 @@ df_oppg3_wide %>%
   facet_wrap(~pris)+
   scale_fill_manual(values=c('lightcoral', 'cornflowerblue')) +
   labs(x='År', y='Milliarder kroner', fill='pris', title = 'Utvinning av råolje og naturgass, inkl. tjenester') +
-  theme_minimal()+
+  theme_minimal(base_size=9)+
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "none")
 ```
