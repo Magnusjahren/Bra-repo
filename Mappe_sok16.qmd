@@ -1,5 +1,5 @@
 ---
-title: "Mappe"
+title: "[kandidatnummre]_SOK1016_M1_V23"
 format: pdf
 editor: visual
 echo: false
