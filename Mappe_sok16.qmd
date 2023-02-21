@@ -287,6 +287,7 @@ df2 %>%
   ggplot()+
   # priser er i millioner kroner så deler på 1000 for å få de i millarder
     geom_col(aes(x=næring, y=verdi/1000, fill=var), position="dodge")+
+  scale_fill_manual(values=c('lightcoral', 'cornflowerblue'))+
    theme_minimal()+
   theme(legend.position="none", # fjerner legende
          axis.text.x=element_blank())+ #fjerner tekst fra x-akse
@@ -364,19 +365,19 @@ Selv om bruttoprodukt per sysselsatt kan være et nyttig mål på produktivitet 
 ```{r}
 df_oppg3_wide <- df2 %>%
   pivot_wider(names_from = var, values_from = verdi) %>% 
-  rename(løpende = 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)') %>% 
-  rename(faste = 'Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)')
+  rename(Løpende = 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)') %>% 
+  rename(Faste = 'Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)')
 df_oppg3_wide <- df_oppg3_wide %>% 
   
   filter(year >= 2012) %>% 
-  pivot_longer(cols=c(løpende, faste), names_to='pris', values_to='verdi')
+  pivot_longer(cols=c(Løpende, Faste), names_to='pris', values_to='verdi')
   
  df_oppg3_wide %>%
    filter(næring %in% c( 'Helse- og omsorgstjenester', 'Industri', 'Fiske, fangst og akvakultur', 'Faglig, vitenskapelig og teknisk tjenesteyting' )) %>%  
   ggplot(aes(x=as.factor(year), y=verdi, fill=pris)) + 
   geom_col(position = 'dodge') +
   facet_wrap(~næring)+
-  scale_fill_manual(values=c('darkred', 'cornflowerblue')) +
+  scale_fill_manual(values=c('lightcoral', 'cornflowerblue')) +
   labs(x='År', y='millioner kroner', fill='Pris') +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   ylim(0,500000)
@@ -394,12 +395,13 @@ På den annen side er det også næringer som ikke nødvendigvis er så følsomm
 df_oppg3_wide %>% 
   filter(year >= 2012) %>% 
   filter(næring == 'Utvinning av råolje og naturgass, inkl. tjenester') %>% 
-  ggplot(aes(x=as.factor(year), group = næring, fill = pris)) + 
-  geom_col(data = filter(df_oppg3_wide, pris == "løpende"), aes(y = verdi/1000), position = "dodge") +
-  geom_col(data = filter(df_oppg3_wide, pris == "faste"), aes(y = verdi/1000), position = "dodge") +
+  ggplot(aes(x=year, fill = pris)) + 
+  geom_col(data = filter(df_oppg3_wide, pris == "Løpende"), aes(y = verdi/1000)) +
+  geom_col(data = filter(df_oppg3_wide, pris == "Faste"), aes(y = verdi/1000)) +
   facet_wrap(~pris)+
-  scale_fill_manual(values=c('red', 'blue')) +
+  scale_fill_manual(values=c('lightcoral', 'cornflowerblue')) +
   labs(x='År', y='Milliarder kroner', fill='pris', title = 'Utvinning av råolje og naturgass, inkl. tjenester') +
+  theme_minimal()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "none")
 ```
