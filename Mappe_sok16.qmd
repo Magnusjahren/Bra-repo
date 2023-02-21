@@ -12,10 +12,7 @@ rm(list=ls())
 library(tidyverse)
 library(rjstat)
 library(httr)
-library(cowplot)
 library(lubridate)
-library(dplyr)
-library(ggthemes)
 options(scipen = 999)
 ```
 
@@ -369,18 +366,18 @@ df_oppg3_wide <- df2 %>%
   pivot_wider(names_from = var, values_from = verdi) %>% 
   rename(løpende = 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)') %>% 
   rename(faste = 'Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)')
-test <- df_oppg3_wide %>% 
+df_oppg3_wide <- df_oppg3_wide %>% 
   
   filter(year >= 2012) %>% 
   pivot_longer(cols=c(løpende, faste), names_to='pris', values_to='verdi')
   
- test %>%
+ df_oppg3_wide %>%
    filter(næring %in% c( 'Helse- og omsorgstjenester', 'Industri', 'Fiske, fangst og akvakultur', 'Faglig, vitenskapelig og teknisk tjenesteyting' )) %>%  
   ggplot(aes(x=as.factor(year), y=verdi, fill=pris)) + 
   geom_col(position = 'dodge') +
   facet_wrap(~næring)+
   scale_fill_manual(values=c('darkred', 'cornflowerblue')) +
-  labs(x='År', y='mill kr', fill='Pris') +
+  labs(x='År', y='millioner kroner', fill='Pris') +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   ylim(0,500000)
 ```
@@ -394,15 +391,15 @@ På den annen side er det også næringer som ikke nødvendigvis er så følsomm
 **Figur** **1.5** Utvinning av råolje og naturgass inkl. tjenester i faste og løpende priser
 
 ```{r}
-test %>% 
+df_oppg3_wide %>% 
   filter(year >= 2012) %>% 
   filter(næring == 'Utvinning av råolje og naturgass, inkl. tjenester') %>% 
   ggplot(aes(x=as.factor(year), group = næring, fill = pris)) + 
-  geom_col(data = filter(test, pris == "løpende"), aes(y = verdi), position = "dodge") +
-  geom_col(data = filter(test, pris == "faste"), aes(y = verdi), position = "dodge") +
+  geom_col(data = filter(test, pris == "løpende"), aes(y = verdi/1000), position = "dodge") +
+  geom_col(data = filter(test, pris == "faste"), aes(y = verdi/1000), position = "dodge") +
   facet_wrap(~pris)+
   scale_fill_manual(values=c('red', 'blue')) +
-  labs(x='År', y='Mill. kr', fill='pris', title = 'Utvinning av råolje og naturgass, inkl. tjenester') +
+  labs(x='År', y='Milliarder kroner', fill='pris', title = 'Utvinning av råolje og naturgass, inkl. tjenester') +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "none")
 ```
