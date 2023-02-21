@@ -16,7 +16,7 @@ library(cowplot)
 library(lubridate)
 library(dplyr)
 library(ggthemes)
-options(scipen = 999)
+#options(scipen = 999)
 ```
 
 ```{r}
@@ -398,10 +398,13 @@ df_oppg3_wide <- df2 %>%
   rename(løpende = 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)') %>% 
   rename(faste = 'Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)')
 
-df_oppg3_wide %>% 
-  filter(næring %in% c( 'Helse- og omsorgstjenester', 'Jordbruk og skogbruk', 'Fiske, fangst og akvakultur', 'Faglig, vitenskapelig og teknisk tjenesteyting' )) %>%  
+test <- df_oppg3_wide %>% 
+  
   filter(year >= 2012) %>% 
-  pivot_longer(cols=c(løpende, faste), names_to='pris', values_to='verdi') %>%
+  pivot_longer(cols=c(løpende, faste), names_to='pris', values_to='verdi')
+  
+ test %>%
+   filter(næring %in% c( 'Helse- og omsorgstjenester', 'Jordbruk og skogbruk', 'Fiske, fangst og akvakultur', 'Faglig, vitenskapelig og teknisk tjenesteyting' )) %>%  
   ggplot(aes(x=as.factor(year), y=verdi, fill=pris)) + 
   geom_col(position = 'dodge', alpha = 0.8) +
   facet_wrap(~næring)+
@@ -419,6 +422,19 @@ Eksempler på slike næringer inkluderer olje- og gassindustrien, gruveindustrie
 
 På den annen side er det også næringer som ikke nødvendigvis er så følsomme for endringer i produktprisene. For eksempel kan tjenestenæringer som helsevesen, utdanning og teknologisektoren i mindre grad påvirkes av slike variasjoner. Dette skyldes at disse sektorene er mindre avhengige av råvarer og energi, og i større grad er avhengige av andre faktorer som teknologiutvikling, innovasjon, og kvaliteten på tjenestene som tilbys.
 
+```{r}
+test %>% 
+  filter(year >= 2012) %>% 
+  filter(næring == 'Utvinning av råolje og naturgass, inkl. tjenester') %>% 
+  ggplot(aes(x=as.factor(year), group = næring, fill = pris)) + 
+  geom_col(data = filter(test, pris == "løpende"), aes(y = verdi), position = "dodge") +
+  geom_col(data = filter(test, pris == "faste"), aes(y = verdi), position = "dodge") +
+  facet_wrap(~pris)+
+  scale_fill_manual(values=c('red', 'blue')) +
+  labs(x='År', y='Mill. kr', fill='pris', title = 'Utvinning av råolje og naturgass, inkl. tjenester') +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
 **Oppgave 4 - 10%**
 
 I norsk sammenheng skiller vi ofte mellom brutto nasjonal produkt (BNP) og brutto nasjonalprodukt på fastlandet (FN-BNP). Hvilke næringer er unntatt fra FN-BNP, og hvorfor gjøres dette? Knytt gjerne besvarelsen til funnene fra oppgave 3.
@@ -426,12 +442,3 @@ I norsk sammenheng skiller vi ofte mellom brutto nasjonal produkt (BNP) og brutt
 Olje og gass trekkes fra fordi det er en inntektskilde som varierer veldig på grunn av markedet. Det er derfor lettere å lete etter sammenhenger i økonomien uten denne sektoren, det er også lettere å sammenlikne målingene internasjonalt. Det er først og fremst produktivitetsveksten i fastlandsøkonomien som bestemmer velstanden i Norge. En stor del av produksjonverdien kan være grunnrente.
 
 Det er lagt vekt på makedsrettede fastlandsnæringer fordi produksjonen i offentlig sektor og boligtjenster ikke omsettes i markeder, det gjør at produksjonstallene stort sett er basert på kostnader.
-
-```{r}
-
-df_oppg3_wide %>% 
-  filter(næring == 'Utvinning av råolje og naturgass, inkl. tjenester') %>% 
-  ggplot(aes(x = year, y = verdi, group_by(næring), color = næring))+
-  geom_col(aes(y = løpende))+
-  geom_col(aes(y = faste))
-```
