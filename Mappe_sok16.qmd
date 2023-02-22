@@ -7,7 +7,6 @@ warning: false
 ---
 
 ```{r, warning=FALSE}
-
 rm(list=ls()) 
 library(tidyverse)
 library(rjstat)
@@ -17,6 +16,7 @@ options(scipen = 999)
 ```
 
 ```{r}
+# Produksjon og inntekt, etter næring, statistikkvariabel og kvartal
 url <- 'https://data.ssb.no/api/v0/no/table/09171/'
   
 query <- '{
@@ -198,21 +198,21 @@ df_syssel <-  hent_indeks.tmp %>%
 **Oppgave 1**
 
 ```{r}
-df2 <- df %>%
+df2 <- df %>%   # lager ett nytt datasett for å jobbe med videre i oppgaven
 separate(kvartal, 
          into=c("year"), 
-         sep="K") %>% 
-  mutate(year = (year)) %>% 
-  rename(var = statistikkvariabel)
+         sep="K") %>%  # lager en ny variabel som inneholder årstall
+  mutate(year = (year)) %>% # endrer variabelen til numerisk
+  rename(var = statistikkvariabel) # endrer navn på variabelen
 
 df2 <- df2 %>% 
-  group_by(year, næring, var) %>% 
-  summarise(verdi = sum(value))
+  group_by(year, næring, var) %>% # grupperer etter årstall, næring og variabel
+  summarise(verdi = sum(value))   # summerer verdiene for hver gruppe
 
 df3<-df2 %>%
-  pivot_wider(names_from = 'var', values_from='verdi') %>%
+  pivot_wider(names_from = 'var', values_from='verdi') %>%  # pivoter for å få en bred tabell
   rename(løpende = 'Produksjon i basisverdi. Løpende priser (mill. kr)',
-         bruttoprodukt= 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)')
+         bruttoprodukt= 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)')  # endrer navn på variabelene
 
 
 # sette sammen data til en figur 
@@ -362,26 +362,26 @@ Selv om bruttoprodukt per sysselsatt kan være et nyttig mål på produktivitet 
 **Figur 1.4** Bruttoprodukt per næring i faste og løpende priser fra 2012 til 2022
 
 ```{r}
-df_oppg3_wide <- df2 %>%
-  pivot_wider(names_from = var, values_from = verdi) %>% 
-  rename(Løpende = 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)') %>% 
-  rename(Faste = 'Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)')
-df_oppg3_wide <- df_oppg3_wide %>% 
+df_oppg3_wide <- df2 %>%    # henter data
+  pivot_wider(names_from = var, values_from = verdi) %>%    # lager en bred tabell
+  rename(Løpende = 'Bruttoprodukt i basisverdi. Løpende priser (mill. kr)') %>%   # gir nye navn til variablene
+  rename(Faste = 'Bruttoprodukt i basisverdi. Faste 2020-priser (mill. kr)')    # gir nye navn til variablene
+df_oppg3_wide <- df_oppg3_wide %>%    # henter data
   
-  filter(year >= 2012) %>% 
-  pivot_longer(cols=c(Løpende, Faste), names_to='pris', values_to='verdi')
+  filter(year >= 2012) %>%  # filtrerer på år
+  pivot_longer(cols=c(Løpende, Faste), names_to='pris', values_to='verdi')    # lager en lang tabell
   
- df_oppg3_wide %>%
-   filter(næring %in% c( 'Helse- og omsorgstjenester', 'Industri', 'Fiske, fangst og akvakultur', 'Faglig, vitenskapelig og teknisk tjenesteyting' )) %>%  
-  ggplot(aes(x=year, y=verdi, fill=pris)) + 
-  geom_col(position = 'dodge') +
-  facet_wrap(~næring)+
-  scale_fill_manual(values=c('lightcoral', 'cornflowerblue')) +
-  labs(x='År', y='Millioner kroner', fill='Pris') +
-   theme_minimal(base_size=9)+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "bottom")+
-  ylim(0,500000)
+ df_oppg3_wide %>%    # henter data
+   filter(næring %in% c( 'Helse- og omsorgstjenester', 'Industri', 'Fiske, fangst og akvakultur', 'Faglig, vitenskapelig og teknisk tjenesteyting' )) %>%   # filtrerer på næring 
+  ggplot(aes(x=year, y=verdi, fill=pris)) +   # lager en plot
+  geom_col(position = 'dodge') +    # lager søyler
+  facet_wrap(~næring)+              # lager en facetwrap, for flere figurer
+  scale_fill_manual(values=c('lightcoral', 'cornflowerblue')) +  # endrer fargene på søylene
+  labs(x='År', y='Millioner kroner', fill='Pris') +     # endrer navnene på aksene
+   theme_minimal(base_size=9)+                          # endrer på tekst størrelsen til aksene
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),  # roterer teksten på x-aksen
+        legend.position = "bottom")+                          # endrer plasseringen til legende
+  ylim(0,500000)  # setter y-aksen
 ```
 
 Næringer som er sterkt avhengige av råvarer eller energiprodukter, kan oppleve store svingninger i bruttoproduktet på grunn av variasjoner i produktprisene. Dette skyldes at prisene på råvarer og energi ofte kan være svært uforutsigbar, og påvirkes av faktorer som tilbud og etterspørsel, geopolitiske hendelser, valutakurser og klimatiske forhold.
@@ -393,18 +393,18 @@ På den annen side er det også næringer som ikke nødvendigvis er så følsomm
 **Figur** **1.5** Utvinning av råolje og naturgass inkl. tjenester i faste og løpende priser
 
 ```{r}
-df_oppg3_wide %>% 
-  filter(year >= 2012) %>% 
-  filter(næring == 'Utvinning av råolje og naturgass, inkl. tjenester') %>% 
-  ggplot(aes(x=year, fill = pris)) + 
-  geom_col(data = filter(df_oppg3_wide, pris == "Løpende"), aes(y = verdi)) +
-  geom_col(data = filter(df_oppg3_wide, pris == "Faste"), aes(y = verdi)) +
-  facet_wrap(~pris)+
-  scale_fill_manual(values=c('lightcoral', 'cornflowerblue')) +
-  labs(x='År', y='Millioner kroner', fill='pris', title = 'Utvinning av råolje og naturgass, inkl. tjenester') +
-  theme_minimal(base_size=9)+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none")
+df_oppg3_wide %>%         # henter data
+  filter(year >= 2012) %>%  # filtrerer på år
+  filter(næring == 'Utvinning av råolje og naturgass, inkl. tjenester') %>%   # filtrerer på næring
+  ggplot(aes(x=year, fill = pris)) +    # lager en plot
+  geom_col(data = filter(df_oppg3_wide, pris == "Løpende"), aes(y = verdi)) +   # lager søyler
+  geom_col(data = filter(df_oppg3_wide, pris == "Faste"), aes(y = verdi)) +     # lager søyler
+  facet_wrap(~pris)+      # lager en facet
+  scale_fill_manual(values=c('lightcoral', 'cornflowerblue')) + # endrer fargene på søylene
+  labs(x='År', y='Millioner kroner', fill='pris', title = 'Utvinning av råolje og naturgass, inkl. tjenester') +    # endrer navnene på aksene
+  theme_minimal(base_size=9)+   # endrer på tekst størrelsen til aksene
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),    # roterer teksten på x-aksen
+        legend.position = "none")   # fjerner legende
 ```
 
 **Oppgave 4**
