@@ -289,6 +289,7 @@ df2 %>%
   ggplot()+
   # priser er i millioner kroner så deler på 1000 for å få de i millarder
     geom_col(aes(x=næring, y=verdi/1000, fill=var), position="dodge")+
+  # endrer fargene så det er en rød tråd mellom figurene
   scale_fill_manual(values=c('lightcoral', 'cornflowerblue'))+
    theme_minimal()+
   theme(legend.position="none", # fjerner legende
@@ -313,7 +314,7 @@ df4 %>%
   geom_col(aes(x=næring, y=plot, fill=names),position = "dodge")+
   theme_minimal(base_size=9)+ # Endrer på tekst størrelsen til aksene
   theme(legend.position=c(0.70,0.92), # Setter legenden inn i figuren
-    plot.title=element_text(size=12), # endrer størrelsen på teksen
+    plot.title=element_text(size=11.5), # endrer størrelsen på teksen
     legend.direction="horizontal", # setter legenden fra vertikal til horisontal
     legend.text= element_text(size=8), # gjør legendestørrelse litt mindre
     legend.key.size = unit(0.4, "cm"))+ # fargeboks litt mindre
@@ -345,7 +346,7 @@ df_bps %>%
   theme_minimal(base_size=9)+
   #fjerner legenden og setter tittel til tekststørrelse 12
   theme(legend.position="none",
-        plot.title=element_text(size=12))+
+        plot.title=element_text(size=11.5))+
   # fikser x-aksene sine navn og gjør så de ikke overlapper, endrer noen navn
   scale_x_discrete(guide = guide_axis(n.dodge = 2),
                    labels=c("Kultur, underholdning og annen tjenesteyting"
@@ -361,7 +362,9 @@ Fordelingen av bruttoprodukt per sysselsatt i hver næring viser at råolje og n
 
 **Oppgave 2**
 
-Bruttoprodukt per sysselsatt er et mål på produktivitet. For eksempel mellom næringer, fylker eller sektorer. Når man skal se på bruttoprodukt som et mål på produktivitet i offentlig sektor kan det by på noen utfordringer. For det første har offentlig sektor en annen form for organisering og produksjon enn privat sektor. Fylker eller kommuner som har olje og gassproduksjon kommer bruttoprodukt per sysselsatt til å være høyere enn andre fylker, se eksempel i figur 1.3. For det andre inkluderes bruttoprodukt vanligvis ikke i offentlig sektors kapitalavkastning, noe som kan undervurdere produktiviteten i offentlig sektor. Spesielt hvis sektoren bruker mye kapital i produksjonen, for eksempel som i helse- og omsorgstjenester.
+Bruttoprodukt per sysselsatt er et mål på produktiviteten. For eksempel mellom næringer, fylker eller sektorer. Når man skal se på bruttoprodukt som et mål på produktivitet i offentlig sektor kan det by på noen utfordringer.
+
+For det første har offentlig sektor en annen form for organisering og produksjon enn privat sektor. Fylker eller kommuner som har olje og gassproduksjon kommer bruttoprodukt per sysselsatt til å være høyere enn andre fylker, se eksempel i figur 1.3. For det andre inkluderes bruttoprodukt vanligvis ikke i offentlig sektors kapitalavkastning, noe som kan undervurdere produktiviteten i offentlig sektor. Spesielt hvis sektoren bruker mye kapital i produksjonen, for eksempel som i helse- og omsorgstjenester.
 
 Selv om bruttoprodukt per sysselsatt kan være et nyttig mål på produktivitet i offentlig sektor, er det nødvendig å bruke flere mål for å få et mer omfattende bilde av produktiviteten i sektoren. Kvalitet og effektivitet er også viktige mål for offentlig sektor, og kan gi et mer komplett bilde av produktiviteten i sektoren. Dermed kan det være et nyttig supplement til andre mål på produktivitet og effektivitet i offentlig sektor.
 
