@@ -362,7 +362,7 @@ Fordelingen av bruttoprodukt per sysselsatt i hver næring viser at råolje og n
 
 **Oppgave 2**
 
-Bruttoprodukt per sysselsatt er et mål på produktiviteten. For eksempel mellom næringer, fylker eller sektorer. Når man skal se på bruttoprodukt som et mål på produktivitet i offentlig sektor kan det by på noen utfordringer.
+Bruttoprodukt per sysselsatt er et mål på produktiviteten i et land. For eksempel mellom næringer, fylker eller sektorer. Når man skal se på bruttoprodukt som et mål på produktivitet i offentlig sektor kan det by på noen utfordringer.
 
 For det første har offentlig sektor en annen form for organisering og produksjon enn privat sektor. Fylker eller kommuner som har olje og gassproduksjon kommer bruttoprodukt per sysselsatt til å være høyere enn andre fylker, se eksempel i figur 1.3. For det andre inkluderes bruttoprodukt vanligvis ikke i offentlig sektors kapitalavkastning, noe som kan undervurdere produktiviteten i offentlig sektor. Spesielt hvis sektoren bruker mye kapital i produksjonen, for eksempel som i helse- og omsorgstjenester.
 
