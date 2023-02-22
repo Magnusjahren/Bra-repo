@@ -278,6 +278,8 @@ pivot_longer(c('syssel','brutto_pros','produ_pros'), names_to = "names", values_
 
 **Figur 1.1** Total produksjon i basisverdi (løpende priser) og bruttoprodukt i basisverdi (løpende priser) for alle næringer 2021
 
+I løpet av 2021 produserte norske næringer varer og tjenester til en totalverdi på 6 848 milliarder kroner. Verdiskapingen, som er forskjellen mellom produksjon og innsatsvarer, utgjorde 3 782 milliarder kroner.
+
 ```{r}
 df2 %>%
   filter(year == 2021) %>%
@@ -300,7 +302,7 @@ df2 %>%
   scale_y_continuous(breaks = seq(from = 0, to = 7000, by = 1000))
 ```
 
-I løpet av 2021 produserte norske næringer varer og tjenester til en totalverdi på 6 848 milliarder kroner. Verdiskapingen, som er forskjellen mellom produksjon og innsatsvarer, utgjorde 3 782 milliarder kroner. Samlet sysselsatte disse næringene litt over 2,5 millioner årsverk, hvor to deltidsstillinger på 50 prosent regnes om til ett årsverk.
+Samlet sysselsatte disse næringene litt over 2,5 millioner årsverk, hvor to deltidsstillinger på 50 prosent regnes om til ett årsverk.
 
 **Figur 1.2** Sysselsetting, produksjon og bruttoprodukt fordelt på næring, 2021
 
