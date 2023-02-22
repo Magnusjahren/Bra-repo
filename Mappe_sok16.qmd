@@ -276,9 +276,9 @@ df_bps <-df_bps %>%
 pivot_longer(c('syssel','brutto_pros','produ_pros'), names_to = "names", values_to = "plot")
 ```
 
-**Figur 1.1** Total produksjon i basisverdi (løpende priser) og bruttoprodukt i basisverdi (løpende priser) for alle næringer 2021
+I løpet av 2021 produserte norske næringer varer og tjenester til en totalverdi på 6 848 milliarder kroner. Verdiskapingen som kalles bruttoprodukt, er forskjellen mellom produksjon etter at produktinnsats er trukket vekk, og utgjorde 3 782 milliarder kroner. Produktinnsats er produkter og tjenester næringer må kjøpe av andre næringer for å produsere sitt produkt, for eksempel strøm.
 
-I løpet av 2021 produserte norske næringer varer og tjenester til en totalverdi på 6 848 milliarder kroner. Verdiskapingen, som er forskjellen mellom produksjon og innsatsvarer, utgjorde 3 782 milliarder kroner.
+**Figur 1.1** Total produksjon i basisverdi (løpende priser) og bruttoprodukt i basisverdi (løpende priser) for alle næringer 2021
 
 ```{r}
 df2 %>%
@@ -302,7 +302,7 @@ df2 %>%
   scale_y_continuous(breaks = seq(from = 0, to = 7000, by = 1000))
 ```
 
-Samlet sysselsatte disse næringene litt over 2,5 millioner årsverk, hvor to deltidsstillinger på 50 prosent regnes om til ett årsverk.
+Samlet sysselsatte næringene litt over 2,5 millioner årsverk, hvor to deltidsstillinger på 50 prosent regnes om til ett årsverk. I 2021 var helse og omsorgstjenester den næringen som sysselsatte flest, med hele 20 prosent av den totale sysselsettingen for alle næringer.
 
 **Figur 1.2** Sysselsetting, produksjon og bruttoprodukt fordelt på næring, 2021
 
@@ -331,7 +331,7 @@ df4 %>%
                                             "Sysselsetting"))
 ```
 
-Industriproduksjonen i Norge var faktisk høyere enn oljeutvinningen i 2021, med 1 095 milliarder kroner mot olje- og gassutvinningens 1 066 milliarder kroner. Imidlertid bruker industrien produktinnsats fra andre næringer, slik at bruttoproduktet kun utgjør 236 milliarder kroner, som tilsvarer omtrent 23 prosent av produksjonen.
+Industriproduksjonen i Norge var nesten høyere enn oljeutvinningen i 2021, med 941 milliarder kroner mot olje- og gassutvinningens 1 066 milliarder kroner. Imidlertid bruker industrien mye produktinnsats fra andre næringer, slik at bruttoproduktet kun utgjør 236 milliarder kroner, som tilsvarer omtrent 23 prosent av produksjonen.
 
 Råolje og naturgass alene utgjør 18 prosent av bruttoproduktet for alle næringer, og siden oljen er en verdifull naturressurs, utgjør bruttoproduktet for olje- og gassutvinning på 918 milliarder kroner hele 85 prosent av produksjonen.
 
@@ -341,23 +341,29 @@ Råolje og naturgass alene utgjør 18 prosent av bruttoproduktet for alle nærin
 df_bps %>%
   ggplot()+
   geom_col(aes(x=næring, y=plott, fill=næring))+
+  # setter tema og gjør tekst størrelsen til 9
   theme_minimal(base_size=9)+
+  #fjerner legenden og setter tittel til tekststørrelse 12
   theme(legend.position="none",
         plot.title=element_text(size=12))+
+  # fikser x-aksene sine navn og gjør så de ikke overlapper, endrer noen navn
   scale_x_discrete(guide = guide_axis(n.dodge = 2),
                    labels=c("Kultur, underholdning og annen tjenesteyting"
                             ="Kultur og underholdning", "Utvinning av råolje og naturgass, inkl. tjenester"="Råolje og naturgass"),
                    )+
-  labs(x="",y="",title="Millioner kroner 2021")
+  # gir tittel og fjerner x og y labels
+  labs(x="",y="",title="Millioner kroner 2021")+
+    # lager en sequence for y-aksen fra 0-16 med step 2
+  scale_y_continuous(breaks = seq(from = 0, to = 16, by = 2))
 ```
 
-Fordelingen av bruttoprodukt per sysselsatt i hver næring viser at råolje og naturgass alene utgjør en så stor andel av bruttoproduktet at sammenligninger blir utfordrende. I 2021 hadde råolje og naturgass en bruttoprodukt per sysselsatt på omtrent 15,8 millioner kroner, mens industrien hadde kun omtrent 1,1 millioner kroner i bruttoprodukt per sysselsatt.
+Fordelingen av bruttoprodukt per sysselsatt i hver næring viser at råolje og naturgass alene utgjør en så stor andel av bruttoproduktet at sammenligninger blir utfordrende. I 2021 hadde råolje og naturgass et bruttoprodukt per sysselsatt på hele 15.8 millioner kroner, mens industrien hadde omtrent 1.1 millioner kroner i bruttoprodukt per sysselsatt.
 
 **Oppgave 2**
 
-Bruttoprodukt per sysselsatt er et mål på produktivitet som brukes til å sammenligne produktiviteten mellom ulike sektorer, inkludert offentlig sektor. Imidlertid er det noen begrensninger når det gjelder å bruke bruttoprodukt som et mål på produktivitet i offentlig sektor. For det første har offentlig sektor en annen form for organisering og produksjon enn privat sektor, noe som kan gjøre det vanskelig å sammenligne produktiviteten mellom sektorene. For det andre inkluderes bruttoprodukt vanligvis ikke i offentlig sektors kapitalavkastning, noe som kan undervurdere produktiviteten i offentlig sektor, spesielt hvis sektoren bruker mye kapital i produksjonen.
+Bruttoprodukt per sysselsatt er et mål på produktivitet. For eksempel mellom næringer, fylker eller sektorer. Når man skal se på bruttoprodukt som et mål på produktivitet i offentlig sektor kan det by på noen utfordringer. For det første har offentlig sektor en annen form for organisering og produksjon enn privat sektor. Fylker eller kommuner som har olje og gassproduksjon kommer bruttoprodukt per sysselsatt til å være høyere enn andre fylker, se eksempel i figur 1.3. For det andre inkluderes bruttoprodukt vanligvis ikke i offentlig sektors kapitalavkastning, noe som kan undervurdere produktiviteten i offentlig sektor. Spesielt hvis sektoren bruker mye kapital i produksjonen, for eksempel som i helse- og omsorgstjenester.
 
-Selv om bruttoprodukt per sysselsatt kan være et nyttig mål på produktivitet i offentlig sektor, er det nødvendig å bruke flere mål for å få et mer omfattende bilde av produktiviteten i sektoren. Kvalitet og effektivitet er også viktige mål for offentlig sektor, og kan gi et mer komplett bilde av produktiviteten i sektoren. Dermed kan det være et nyttig supplement til andre mål på produktivitet og effektivitet i offentlig sektor. Figur 1.3 antyder at bruttoprodukt per sysselsatt er et upresist mål for å måle produktiviteten, da olje- og gassnæringen utgjør en så stor del av økonomien i offentlig sektor.
+Selv om bruttoprodukt per sysselsatt kan være et nyttig mål på produktivitet i offentlig sektor, er det nødvendig å bruke flere mål for å få et mer omfattende bilde av produktiviteten i sektoren. Kvalitet og effektivitet er også viktige mål for offentlig sektor, og kan gi et mer komplett bilde av produktiviteten i sektoren. Dermed kan det være et nyttig supplement til andre mål på produktivitet og effektivitet i offentlig sektor.
 
 **Oppgave 3**
 
@@ -411,6 +417,6 @@ df_oppg3_wide %>%         # henter data
 
 **Oppgave 4**
 
-Olje og gass trekkes fra fordi det er en inntektskilde som varierer veldig på grunn av markedet. Det er derfor lettere å lete etter sammenhenger i økonomien uten denne sektoren, det er også lettere å sammenlikne målingene internasjonalt. Det er først og fremst produktivitetsveksten i fastlandsøkonomien som bestemmer velstanden i Norge. En stor del av produksjonverdien kan være grunnrente.
+Olje og gass trekkes fra fordi det er en inntektskilde som varierer veldig på grunn av markedet. Det er derfor lettere å lete etter sammenhenger i økonomien uten denne næringen, det er også lettere å sammenlikne målingene internasjonalt. Det er først og fremst produktivitetsveksten i fastlandsøkonomien som bestemmer velstanden i Norge. En stor del av produksjonverdien kan også være grunnrente.
 
 Det er lagt vekt på makedsrettede fastlandsnæringer fordi produksjonen i offentlig sektor og boligtjenster ikke omsettes i markeder, det gjør at produksjonstallene stort sett er basert på kostnader.
