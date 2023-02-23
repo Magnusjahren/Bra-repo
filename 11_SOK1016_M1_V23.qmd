@@ -312,7 +312,7 @@ df4 %>%
   ggplot()+ 
   #dodge gjør slik at søylene går ved siden av hverandre
   geom_col(aes(x=næring, y=plot, fill=names),position = "dodge")+
-  theme_minimal(base_size=9)+ # Endrer på tekst størrelsen til aksene
+  theme_minimal(base_size=8.5)+ # Endrer på tekst størrelsen til aksene
   theme(legend.position=c(0.70,0.92), # Setter legenden inn i figuren
     plot.title=element_text(size=11.5), # endrer størrelsen på teksen
     legend.direction="horizontal", # setter legenden fra vertikal til horisontal
@@ -343,7 +343,7 @@ df_bps %>%
   ggplot()+
   geom_col(aes(x=næring, y=plott, fill=næring))+
   # setter tema og gjør tekst størrelsen til 9
-  theme_minimal(base_size=9)+
+  theme_minimal(base_size=8.5)+
   #fjerner legenden og setter tittel til tekststørrelse 12
   theme(legend.position="none",
         plot.title=element_text(size=11.5))+
